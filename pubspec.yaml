@@ -24,3 +24,4 @@ flutter:
     - shaders/playground/fence.glsl
     - shaders/shader_toy_examples/example_1.glsl
     - shaders/playground/rectangle.glsl
+    - shaders/gallery_effect.glsl
