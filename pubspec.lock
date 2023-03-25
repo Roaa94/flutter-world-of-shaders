@@ -62,6 +62,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_shaders:
+    dependency: "direct main"
+    description:
+      name: flutter_shaders
+      sha256: "1534a12800a01cb48ab770d4a502e36174d3b738b24e0492f3eea9e5d691e9bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -178,3 +186,4 @@ packages:
     version: "4.0.0+1"
 sdks:
   dart: ">=2.19.4 <3.0.0"
+  flutter: ">=3.7.0-0.0"
