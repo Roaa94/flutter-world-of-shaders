@@ -20,6 +20,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   shaders:
-    - shaders/playground.glsl
-    - shaders/fence.glsl
+    - shaders/playground/playground.glsl
+    - shaders/playground/fence.glsl
     - shaders/shader_toy_examples/example_1.glsl

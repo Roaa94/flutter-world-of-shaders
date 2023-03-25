@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/shader_toy_examples/shader_toy_example_1.dart';
+import 'package:flutter_world_of_shaders/playground/playground_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ShaderToyExample1(),
+      home: const PlaygroundPage(),
     );
   }
 }

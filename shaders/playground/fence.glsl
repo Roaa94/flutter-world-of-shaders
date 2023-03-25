@@ -11,6 +11,10 @@ precision mediump float;
 // ```
 uniform vec2 uSize;
 
+// The time in seconds since this shader was created
+// This can be passed from Flutter by simply using a Timer
+uniform float uTime;
+
 // A 4-dimentional vector representing the color to be returned from the shader
 // The 4 dimentions here correspond to the color channels R, G, B, and A
 out vec4 fragColor;
@@ -50,7 +54,7 @@ void main() {
     // ```
     // float y = pow(uv.x, 5.0);
     // ```
-    float y = pow(uv.x, 5.0);
+    float y = smoothstep(0.0, 1.0, uv.x);
 
     // Create gradient color that represents y in relation to the uv.x coordinate
     // This assigns y to the 3 values of the vec3 type
@@ -70,24 +74,55 @@ void main() {
     vec3 pinkColor = vec3(1.0, 0.0, 1.0);
 
     // Plot representing the relationship between uv.x & uv.y
-    //
-    // Given a range of two numbers and a value, the `smoothstep` function
-    // will interpolate the value between the defined range.
-    // The two first parameters are for the beginning and end of the transition,
-    // while the third is for the value to interpolate.
-    // See: https://thebookofshaders.com/glossary/?search=smoothstep
-    //
-    // For example, given `uv`, the normalized 2D surface coordinates,
-    // the following function call will plot a line on Y using a value between 0.0-1.0
-    float uvPlot = smoothstep(0.01, 0.0, abs(uv.y - uv.x));
-    // Add a color to the uv plot
-    vec3 uvPlotColored = uvPlot * greenColor;
+    // `pct` refers to values between 0 and 1
+    float uvPlotPct = smoothstep(0.01, 0.0, abs(uv.y - uv.x));
 
-    float pct = smoothstep(y - 0.01, y, uv.y) - smoothstep(y, y + 0.01, uv.y);
+    float dynamicPlotPct = smoothstep(y - 0.01, y, uv.y) - smoothstep(y, y + 0.01, uv.y);
 
-    // Add plots to the gradient color
-//    color = (1.0 - pct) * color + pct * pinkColor + uvPlotColored;
+    // Add the plot of the dynamic Y line
+    color = (1.0 - dynamicPlotPct) * color + (dynamicPlotPct * pinkColor);
+
+    // Add the plot of the fixed uv.x vs uv.y line
+    color = (1.0 - uvPlotPct) * color + (uvPlotPct * greenColor);
 
     // fragColor = vec4(1.0, 0.0, 1.0, 1.0);
     fragColor = vec4(color, 1.0);
 }
+
+// Information
+// ----------------------------------------------------------------
+// The `step()` Function
+// Receives two parameters. The first one is the limit or threshold,
+// while the second one is the value we want to check or pass.
+// Any value under the limit will return 0.0 while everything above the limit will return 1.0.
+// See: https://thebookofshaders.com/glossary/?search=step
+//
+// For example
+// ```
+// float y = step(0.5, x);
+// ```
+// `y` will equal 0.0 as long as x is less than 0.5
+// and it will equal 1.0 when x is more than 0.5
+//
+// Notes:
+// * The `step()` function can correspond to `if` statements when thinking about code flow
+//      i.e. from the previous example, it can be thought of as:
+//      If x is less than 0.5, return 0.0, else, return 1.0
+//      This is useful when thinking about drawing something with shaders
+// ----------------------------------------------------------------
+// The `smoothstep()` function
+// Draws a smooth line between 2 values, along the 3rd
+// See: https://thebookofshaders.com/glossary/?search=smoothstep
+//
+// Given a range of two numbers and a value, the `smoothstep` function
+// will interpolate the value between the defined range.
+// The two first parameters are for the beginning and end of the transition,
+// while the third is for the value to interpolate.
+//
+// For example:
+// ```
+// y = smoothstep(0.0, 1.0, x);
+// ```
+// Will draw a smooth diagonal line between the top left and bottom right corners
+// ----------------------------------------------------------------
+//

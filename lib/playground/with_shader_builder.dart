@@ -16,7 +16,7 @@ class WithShaderBuilder extends StatelessWidget {
             painter: ShaderPainter(shader),
           );
         },
-        assetKey: 'shaders/playground.glsl',
+        assetKey: 'shaders/playground/playground.glsl',
       ),
     );
   }

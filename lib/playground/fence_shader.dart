@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,10 @@ class FenceShader extends StatefulWidget {
 class _FenceShaderState extends State<FenceShader> {
   FragmentProgram? program;
   FragmentShader? shader;
-  bool isLoading = false;
+
+  final _timerEnabled = false;
+  Timer? timer;
+  double time = 0;
 
   Future<void> _loadShader() async {
     program = await FragmentProgram.fromAsset('shaders/fence.glsl');
@@ -30,10 +34,20 @@ class _FenceShaderState extends State<FenceShader> {
   @override
   void initState() {
     super.initState();
-    setState(() => isLoading = true);
-    _loadShader().then((_) {
-      setState(() => isLoading = false);
-    });
+    if (_timerEnabled) {
+      timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+        setState(() {
+          time += 0.016;
+        });
+      });
+    }
+    _loadShader();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -44,19 +58,17 @@ class _FenceShaderState extends State<FenceShader> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
     if (shader == null) {
-      return const Center(child: Text('Shader could not be loaded!'));
+      return const SizedBox.shrink();
     }
-    final screenSize = MediaQuery.of(context).size;
 
-    final shaderAreaSize = screenSize * 0.8;
+    final screenSize = MediaQuery.of(context).size;
+    final shaderAreaSize = screenSize * 1;
 
     shader!
       ..setFloat(0, shaderAreaSize.width)
-      ..setFloat(1, shaderAreaSize.height);
+      ..setFloat(1, shaderAreaSize.height)
+      ..setFloat(2, time);
 
     return Center(
       child: SizedBox(
@@ -88,6 +100,6 @@ class FenceShaderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }
