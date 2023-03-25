@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/home_page.dart';
+import 'package:flutter_world_of_shaders/shader_toy_examples/shader_toy_example_1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,15 +8,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter World of Shaders',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const ShaderToyExample1(),
     );
   }
 }
