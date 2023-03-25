@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/playground/fence_shader.dart';
+import 'package:flutter_world_of_shaders/playground/shapes_shaders.dart';
 
 class PlaygroundPage extends StatelessWidget {
   const PlaygroundPage({super.key});
@@ -7,7 +7,7 @@ class PlaygroundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: FenceShader(),
+      body: ShapesShaders(),
     );
   }
 }

@@ -13,8 +13,6 @@ out vec4 fragColor;
 
 void main() {
     // The local position of the pixel being evaluated
-    // A varying value that contains the local coordinates for the
-    // particular fragment being evaluated
     vec2 localPos = FlutterFragCoord().xy;
 
     // The normalized position of the pixel being evaluated

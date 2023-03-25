@@ -125,4 +125,3 @@ void main() {
 // ```
 // Will draw a smooth diagonal line between the top left and bottom right corners
 // ----------------------------------------------------------------
-//
