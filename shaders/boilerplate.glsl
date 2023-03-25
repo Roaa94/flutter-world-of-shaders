@@ -4,12 +4,10 @@ precision mediump float;
 
 // A 2-dimentional vector representing the width & height, respectively
 // of the area the shader is being applied to
-// Passing these values from Flutter code to the shader would look like:
-// ```
-// shader.setFloat(0, width)
-// shader.setFloat(1, height)
-// ```
 uniform vec2 uSize;
+
+// The time in seconds since this shader was created
+uniform float uTime;
 
 out vec4 fragColor;
 
