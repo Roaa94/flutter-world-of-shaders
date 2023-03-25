@@ -9,7 +9,7 @@ class GalleryGrid extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          flex: 4,
+          // flex: 4,
           child: Row(
             children: [
               Expanded(
@@ -28,7 +28,7 @@ class GalleryGrid extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 3,
+          // flex: 3,
           child: Row(
             children: [
               Expanded(
@@ -55,7 +55,7 @@ class GalleryGrid extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 2,
+          // flex: 2,
           child: Row(
             children: const [
               Expanded(child: GalleryItem()),
