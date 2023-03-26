@@ -8,13 +8,14 @@ uniform vec2 uSize;
 
 // The time in seconds since this shader was created
 uniform float uAmount;
+uniform float uPower;
 uniform float uTime;
 
 uniform sampler2D tInput;
 
 out vec4 fragColor;
 
-vec4 fragment(vec2 originalUv, vec2 fragCoord) {
+vec2 fisheye(vec2 fragCoord) {
     // Fisheye distortion
     // Math source: https://www.shadertoy.com/view/td2GzW
     vec2 p = fragCoord.xy / uSize.x;
@@ -23,7 +24,7 @@ vec4 fragment(vec2 originalUv, vec2 fragCoord) {
     vec2 d = p - m; // Vector from center to current fragment
     float r = sqrt(dot(d, d)); // Distance of pixel from center
 
-    float power = -0.2 * sin(uAmount * 2.0);
+    float power = -uPower * sin(uAmount * 2.0);
 
     float bind; // Radius of 1:1 effect
     if (power > 0.0)
@@ -44,17 +45,18 @@ vec4 fragment(vec2 originalUv, vec2 fragCoord) {
     else uv = p; // No effect for power = 1.0
 
     uv.y *= prop;
+    return uv;
+}
 
+vec4 fragment(vec2 fragCoord) {
+    vec2 uv = fisheye(fragCoord);
     vec4 pixelColor = texture(tInput, uv);
     return pixelColor;
 }
 
 void main() {
     // The local position of the pixel being evaluated
-    vec2 localPos = FlutterFragCoord().xy;
+    vec2 fragCoord = FlutterFragCoord().xy;
 
-    // The normalized position of the pixel being evaluated
-    vec2 uv = localPos / uSize;
-
-    fragColor = fragment(uv, localPos);
+    fragColor = fragment(fragCoord);
 }

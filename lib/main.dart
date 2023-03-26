@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
 import 'package:flutter_world_of_shaders/gallery/gallery_page.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const GalleryPage(),
+      home: const FisheyeDistortionPage(),
     );
   }
 }

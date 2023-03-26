@@ -30,6 +30,7 @@ class _GalleryEffectState extends State<GalleryEffect> {
                   ..setFloat(0, size.width)
                   ..setFloat(1, size.height)
                   ..setFloat(2, distortion)
+                  ..setFloat(3, 0.2)
                   ..setImageSampler(0, image);
 
                 canvas.drawRect(
@@ -40,7 +41,7 @@ class _GalleryEffectState extends State<GalleryEffect> {
               child: widget.child,
             );
           },
-          assetKey: 'shaders/gallery_effect.glsl',
+          assetKey: 'shaders/fisheye.glsl',
         ),
         Positioned(
           bottom: 10,
