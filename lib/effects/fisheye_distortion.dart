@@ -32,32 +32,28 @@ class FisheyeDistortion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ShaderBuilder(
-          (BuildContext context, ui.FragmentShader shader, child) {
-            return AnimatedSampler(
-              (ui.Image image, size, canvas) {
-                shader
-                  ..setFloat(0, size.width)
-                  ..setFloat(1, size.height)
-                  ..setFloat(2, distortionAmount)
-                  ..setFloat(3, strength)
-                  ..setImageSampler(0, image);
+    return ShaderBuilder(
+      (BuildContext context, ui.FragmentShader shader, child) {
+        return AnimatedSampler(
+          (ui.Image image, size, canvas) {
+            shader
+              ..setFloat(0, size.width)
+              ..setFloat(1, size.height)
+              ..setFloat(2, distortionAmount)
+              ..setFloat(3, strength)
+              ..setImageSampler(0, image);
 
-                canvas.drawRect(
-                  Offset.zero & size,
-                  Paint()..shader = shader,
-                );
-              },
-              enabled: enabled,
-              child: child!,
+            canvas.drawRect(
+              Offset.zero & size,
+              Paint()..shader = shader,
             );
           },
-          assetKey: 'shaders/fisheye.glsl',
-          child: child,
-        ),
-      ],
+          enabled: enabled,
+          child: child!,
+        );
+      },
+      assetKey: 'shaders/fisheye.glsl',
+      child: child,
     );
   }
 }

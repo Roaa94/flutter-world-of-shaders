@@ -13,6 +13,19 @@ class GalleryWrapper extends StatefulWidget {
 class _GalleryWrapperState extends State<GalleryWrapper>
     with SingleTickerProviderStateMixin {
   double distortionAmount = 0;
+  bool _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      precacheImage(
+        Image.asset('assets/gallery/trevi-fountain-thumb.png').image,
+        context,
+      );
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {

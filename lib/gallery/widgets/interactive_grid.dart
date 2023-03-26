@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 typedef InteractiveGridItemBuilder = Widget Function(
@@ -51,7 +49,7 @@ class _InteractiveGridState extends State<InteractiveGrid>
     }
   }
 
-  void _animateResetInitialize() {
+  void _snapToGridItem() {
     final currentOffset = _transformationController.value.getTranslation();
 
     final pannedViewportsCountX =
@@ -120,14 +118,10 @@ class _InteractiveGridState extends State<InteractiveGrid>
       onInteractionStart: _onInteractionStart,
       onInteractionUpdate: (details) {
         // log('Updated');
-        log(details.focalPointDelta.toString());
+        // log(details.toString());
       },
       onInteractionEnd: (details) {
-        // print('_transformationController.value');
-        // print(_transformationController.value.getTranslation());
-        // log('Ended');
-        // log(details.toString());
-        _animateResetInitialize();
+        _snapToGridItem();
         widget.onScrollEnd?.call();
       },
       child: SizedBox(

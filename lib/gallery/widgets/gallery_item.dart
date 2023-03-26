@@ -16,7 +16,7 @@ class GalleryItem extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Image.asset(
-          'assets/gallery/trevi-fountain.jpeg',
+          'assets/gallery/trevi-fountain-thumb.png',
           fit: BoxFit.cover,
         ),
       ),
