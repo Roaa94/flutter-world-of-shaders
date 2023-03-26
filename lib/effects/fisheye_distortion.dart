@@ -3,56 +3,46 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 
-class FisheyeDistortionPage extends StatelessWidget {
-  const FisheyeDistortionPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FisheyeDistortion(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            'assets/bricks.jpg',
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FisheyeDistortion extends StatefulWidget {
+class FisheyeDistortion extends StatelessWidget {
   const FisheyeDistortion({
     super.key,
     required this.child,
-    this.power = 0.2,
+    this.enabled = true,
+    this.distortionAmount = 0,
+    // Todo: make Fisheye effect work, currently only Anti-Fisheye is implemented
+    this.isAntiFisheye = true,
+    this.strength = 0.2,
   });
 
+  /// Child to apply the effect to
   final Widget child;
-  final double power;
 
-  @override
-  State<FisheyeDistortion> createState() => _FisheyeDistortionState();
-}
+  /// Whether effect is enabled
+  final bool enabled;
 
-class _FisheyeDistortionState extends State<FisheyeDistortion> {
-  double distortion = 1;
+  /// The amount of the distortion,
+  /// 0 => no distortion, 1 => maximum distortion
+  final double distortionAmount;
+
+  /// Whether the effect is Anti-Fisheye
+  final bool isAntiFisheye;
+
+  /// The strength of the Fisheye effect
+  final double strength;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         ShaderBuilder(
-          (BuildContext context, ui.FragmentShader shader, Widget? child) {
+          (BuildContext context, ui.FragmentShader shader, child) {
             return AnimatedSampler(
               (ui.Image image, size, canvas) {
                 shader
                   ..setFloat(0, size.width)
                   ..setFloat(1, size.height)
-                  ..setFloat(2, distortion)
-                  ..setFloat(3, widget.power)
+                  ..setFloat(2, distortionAmount)
+                  ..setFloat(3, strength)
                   ..setImageSampler(0, image);
 
                 canvas.drawRect(
@@ -60,31 +50,12 @@ class _FisheyeDistortionState extends State<FisheyeDistortion> {
                   Paint()..shader = shader,
                 );
               },
-              child: widget.child,
+              enabled: enabled,
+              child: child!,
             );
           },
           assetKey: 'shaders/fisheye.glsl',
-        ),
-        Positioned(
-          bottom: 10,
-          left: 10,
-          right: 10,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Slider(
-              activeColor: Colors.white,
-              value: distortion,
-              divisions: 200,
-              onChanged: (value) {
-                setState(() {
-                  distortion = value;
-                });
-              },
-            ),
-          ),
+          child: child,
         ),
       ],
     );

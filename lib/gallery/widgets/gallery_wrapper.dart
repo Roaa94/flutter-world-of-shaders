@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/gallery/widgets/gallery_effect.dart';
+import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/gallery_grid.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/interactive_grid.dart';
 
@@ -23,9 +21,9 @@ class _GalleryWrapperState extends State<GalleryWrapper>
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: distortionAmount),
       curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
       builder: (context, double distortionAmount, Widget? child) {
-        return GalleryEffect(
+        return FisheyeDistortion(
           distortionAmount: distortionAmount,
           child: child!,
         );
