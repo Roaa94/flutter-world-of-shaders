@@ -3,33 +3,30 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 
-class GalleryEffect extends StatefulWidget {
+class GalleryEffect extends StatelessWidget {
   const GalleryEffect({
     super.key,
     required this.child,
+    this.enabled = true,
+    this.distortionAmount = 0,
   });
 
   final Widget child;
-
-  @override
-  State<GalleryEffect> createState() => _GalleryEffectState();
-}
-
-class _GalleryEffectState extends State<GalleryEffect> {
-  double distortion = 1;
+  final bool enabled;
+  final double distortionAmount;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         ShaderBuilder(
-          (BuildContext context, ui.FragmentShader shader, Widget? child) {
+          (BuildContext context, ui.FragmentShader shader, child) {
             return AnimatedSampler(
               (ui.Image image, size, canvas) {
                 shader
                   ..setFloat(0, size.width)
                   ..setFloat(1, size.height)
-                  ..setFloat(2, distortion)
+                  ..setFloat(2, distortionAmount)
                   ..setFloat(3, 0.2)
                   ..setImageSampler(0, image);
 
@@ -38,24 +35,12 @@ class _GalleryEffectState extends State<GalleryEffect> {
                   Paint()..shader = shader,
                 );
               },
-              child: widget.child,
+              enabled: enabled,
+              child: child!,
             );
           },
           assetKey: 'shaders/fisheye.glsl',
-        ),
-        Positioned(
-          bottom: 10,
-          left: 10,
-          right: 10,
-          child: Slider(
-            value: distortion,
-            onChanged: (value) {
-              setState(() {
-                distortion = value;
-              });
-            },
-            divisions: 100,
-          ),
+          child: child,
         ),
       ],
     );

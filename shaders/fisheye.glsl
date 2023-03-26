@@ -9,7 +9,6 @@ uniform vec2 uSize;
 // The time in seconds since this shader was created
 uniform float uAmount;
 uniform float uPower;
-uniform float uTime;
 
 uniform sampler2D tInput;
 
@@ -17,7 +16,7 @@ out vec4 fragColor;
 
 vec2 fisheye(vec2 fragCoord) {
     // Fisheye distortion
-    // Math source: https://www.shadertoy.com/view/td2GzW
+    // Source: https://www.shadertoy.com/view/td2GzW
     vec2 p = fragCoord.xy / uSize.x;
     float prop = uSize.x / uSize.y; // Screen proportions
     vec2 m = vec2(0.5, 0.5 / prop); // Center coords
@@ -28,13 +27,13 @@ vec2 fisheye(vec2 fragCoord) {
 
     float bind; // Radius of 1:1 effect
     if (power > 0.0)
-    bind = sqrt(dot(m, m)); // Stick to corners
+    bind = sqrt(dot(m, m)); // Stick to corners for Fisheye
     else {
         if (prop < 1.0)
         bind = m.x;
         else
         bind = m.y;
-    } //stick to borders
+    } // Stick to borders for Anti-Fisheye
 
     // Weird formulas
     vec2 uv;
