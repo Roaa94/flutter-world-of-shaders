@@ -10,8 +10,8 @@ typedef InteractiveGridItemBuilder = Widget Function(
 class InteractiveGrid extends StatefulWidget {
   const InteractiveGrid({
     super.key,
-    required this.width,
-    required this.height,
+    required this.viewportWidth,
+    required this.viewportHeight,
     required this.itemBuilder,
     this.itemsPerRow = 3,
     this.itemsPerCol = 3,
@@ -19,13 +19,17 @@ class InteractiveGrid extends StatefulWidget {
     this.onScrollEnd,
   });
 
-  final double width;
-  final double height;
+  final double viewportWidth;
+  final double viewportHeight;
   final InteractiveGridItemBuilder itemBuilder;
   final int itemsPerRow;
   final int itemsPerCol;
   final VoidCallback? onScrollStart;
   final VoidCallback? onScrollEnd;
+
+  double get gridWidth => viewportWidth * itemsPerRow;
+
+  double get gridHeight => viewportHeight * itemsPerCol;
 
   @override
   State<InteractiveGrid> createState() => _InteractiveGridState();
@@ -48,11 +52,29 @@ class _InteractiveGridState extends State<InteractiveGrid>
   }
 
   void _animateResetInitialize() {
+    final currentOffset = _transformationController.value.getTranslation();
+
+    final pannedViewportsCountX =
+        (currentOffset.x / widget.viewportWidth).round();
+    final pannedViewportsCountY =
+        (currentOffset.y / widget.viewportHeight).round();
+
     _controllerReset.reset();
     _animationReset = Matrix4Tween(
       begin: _transformationController.value,
-      end: Matrix4.identity(),
-    ).animate(_controllerReset);
+      end: Matrix4.identity()
+        ..setTranslationRaw(
+          pannedViewportsCountX * widget.viewportWidth,
+          pannedViewportsCountY * widget.viewportHeight,
+          0,
+        ),
+    ).animate(
+      CurvedAnimation(
+        parent: _controllerReset,
+        curve: Curves.easeOut,
+      ),
+    );
+
     _animationReset!.addListener(_onAnimateReset);
     _controllerReset.forward();
   }
@@ -98,23 +120,23 @@ class _InteractiveGridState extends State<InteractiveGrid>
       onInteractionStart: _onInteractionStart,
       onInteractionUpdate: (details) {
         // log('Updated');
-        // log(details.focalPointDelta.toString());
+        log(details.focalPointDelta.toString());
       },
       onInteractionEnd: (details) {
-        print('_transformationController.value');
-        print(_transformationController.value.getTranslation());
+        // print('_transformationController.value');
+        // print(_transformationController.value.getTranslation());
         // log('Ended');
         // log(details.toString());
-        // _animateResetInitialize();
+        _animateResetInitialize();
         widget.onScrollEnd?.call();
       },
       child: SizedBox(
-        width: widget.width * widget.itemsPerRow,
-        height: widget.height * widget.itemsPerCol,
+        width: widget.gridWidth,
+        height: widget.gridHeight,
         child: GridView.count(
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: widget.itemsPerRow,
-          childAspectRatio: widget.width / widget.height,
+          childAspectRatio: widget.viewportWidth / widget.viewportHeight,
           children: List.generate(
             widget.itemsPerRow * widget.itemsPerCol,
             (index) => widget.itemBuilder(context, index),

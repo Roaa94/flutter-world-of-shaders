@@ -21,7 +21,7 @@ class _GalleryWrapperState extends State<GalleryWrapper>
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: distortionAmount),
       curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       builder: (context, double distortionAmount, Widget? child) {
         return FisheyeDistortion(
           distortionAmount: distortionAmount,
@@ -29,8 +29,8 @@ class _GalleryWrapperState extends State<GalleryWrapper>
         );
       },
       child: InteractiveGrid(
-        width: screenSize.width,
-        height: screenSize.height,
+        viewportWidth: screenSize.width,
+        viewportHeight: screenSize.height,
         onScrollStart: () {
           setState(() {
             distortionAmount = 0.9;
