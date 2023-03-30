@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 typedef InteractiveGridItemBuilder = Widget Function(
@@ -33,108 +34,75 @@ class InteractiveGrid extends StatefulWidget {
   State<InteractiveGrid> createState() => _InteractiveGridState();
 }
 
-class _InteractiveGridState extends State<InteractiveGrid>
-    with TickerProviderStateMixin {
-  final TransformationController _transformationController =
-      TransformationController();
-  Animation<Matrix4>? _animationReset;
-  late final AnimationController _controllerReset;
+class _InteractiveGridState extends State<InteractiveGrid> {
+  Duration _animationDuration = Duration.zero;
+  Offset _gridOffset = Offset.zero;
 
-  void _onAnimateReset() {
-    _transformationController.value = _animationReset!.value;
-    if (!_controllerReset.isAnimating) {
-      _animationReset!.removeListener(_onAnimateReset);
-      _animationReset = null;
-      _controllerReset.reset();
-    }
-  }
-
-  void _snapToGridItem() {
-    final currentOffset = _transformationController.value.getTranslation();
-
-    final pannedViewportsCountX =
-        (currentOffset.x / widget.viewportWidth).round();
-    final pannedViewportsCountY =
-        (currentOffset.y / widget.viewportHeight).round();
-
-    _controllerReset.reset();
-    _animationReset = Matrix4Tween(
-      begin: _transformationController.value,
-      end: Matrix4.identity()
-        ..setTranslationRaw(
-          pannedViewportsCountX * widget.viewportWidth,
-          pannedViewportsCountY * widget.viewportHeight,
-          0,
-        ),
-    ).animate(
-      CurvedAnimation(
-        parent: _controllerReset,
-        curve: Curves.easeOut,
-      ),
-    );
-
-    _animationReset!.addListener(_onAnimateReset);
-    _controllerReset.forward();
-  }
-
-// Stop a running reset to home transform animation.
-  void _animateResetStop() {
-    _controllerReset.stop();
-    _animationReset?.removeListener(_onAnimateReset);
-    _animationReset = null;
-    _controllerReset.reset();
-  }
-
-  void _onInteractionStart(ScaleStartDetails details) {
-    // If the user tries to cause a transformation while the reset animation is
-    // running, cancel the reset animation.
-    if (_controllerReset.status == AnimationStatus.forward) {
-      _animateResetStop();
-    }
+  void _onScaleStart(ScaleStartDetails details) {
     widget.onScrollStart?.call();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _controllerReset = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
+  void _onScaleUpdate(ScaleUpdateDetails details) {
+    // print('Scale');
+    // print(details.localFocalPoint);
+    setState(() {
+      _gridOffset += details.focalPointDelta;
+    });
   }
 
-  @override
-  void dispose() {
-    _controllerReset.dispose();
-    super.dispose();
+  Future<void> _onScaleEnd(ScaleEndDetails details) async {
+    final pannedViewportsCountX =
+        (_gridOffset.dx / widget.viewportWidth).round();
+    final pannedViewportsCountY =
+        (_gridOffset.dy / widget.viewportHeight).round();
+
+    setState(() {
+      // Todo: change duration based on velocity
+      _animationDuration = const Duration(milliseconds: 300);
+      _gridOffset = Offset(
+        pannedViewportsCountX * widget.viewportWidth,
+        pannedViewportsCountY * widget.viewportHeight,
+      );
+    });
+    await Future<dynamic>.delayed(Duration.zero);
+    // setState(() {
+    //   _animationDuration = Duration.zero;
+    // });
+    widget.onScrollEnd?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    return InteractiveViewer(
-      transformationController: _transformationController,
-      constrained: false,
-      scaleEnabled: false,
-      onInteractionStart: _onInteractionStart,
-      onInteractionUpdate: (details) {
-        // log('Updated');
-        // log(details.toString());
-      },
-      onInteractionEnd: (details) {
-        _snapToGridItem();
-        widget.onScrollEnd?.call();
-      },
-      child: SizedBox(
-        width: widget.gridWidth,
-        height: widget.gridHeight,
-        child: GridView.count(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: widget.itemsPerRow,
-          childAspectRatio: widget.viewportWidth / widget.viewportHeight,
-          children: List.generate(
-            widget.itemsPerRow * widget.itemsPerCol,
-            (index) => widget.itemBuilder(context, index),
-          ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onScaleStart: _onScaleStart,
+      onScaleUpdate: _onScaleUpdate,
+      onScaleEnd: _onScaleEnd,
+      child: OverflowBox(
+        maxHeight: double.infinity,
+        maxWidth: double.infinity,
+        child: TweenAnimationBuilder(
+          duration: _animationDuration,
+          tween: Tween<Offset>(begin: Offset.zero, end: _gridOffset),
+          builder: (context, Offset offset, Widget? child) {
+            return Transform.translate(
+              offset: offset,
+              child: SizedBox(
+                width: widget.gridWidth,
+                height: widget.gridHeight,
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: widget.itemsPerRow,
+                  childAspectRatio:
+                      widget.viewportWidth / widget.viewportHeight,
+                  children: List.generate(
+                    widget.itemsPerRow * widget.itemsPerCol,
+                    (index) => widget.itemBuilder(context, index),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
