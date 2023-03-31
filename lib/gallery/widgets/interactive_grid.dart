@@ -38,12 +38,14 @@ class InteractiveGrid extends StatefulWidget {
 class _InteractiveGridState extends State<InteractiveGrid> {
   Duration _animationDuration = Duration.zero;
   final _gridOffsetNotifier = ValueNotifier<Offset>(Offset.zero);
+  Offset _delta = Offset.zero;
 
   void _onScaleStart(ScaleStartDetails details) {
     widget.onScrollStart?.call();
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
+    _delta = details.focalPointDelta;
     final newOffset = _gridOffsetNotifier.value + details.focalPointDelta;
     // print(newOffset);
     _gridOffsetNotifier.value = newOffset.clamp(
@@ -56,10 +58,18 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   }
 
   Future<void> _onScaleEnd(ScaleEndDetails details) async {
-    final pannedViewportsCountX =
-        (_gridOffsetNotifier.value.dx / widget.viewportWidth).round();
-    final pannedViewportsCountY =
-        (_gridOffsetNotifier.value.dy / widget.viewportHeight).round();
+    print('Delta: $_delta');
+    final pannedViewportsCountXRaw =
+        _gridOffsetNotifier.value.dx / widget.viewportWidth;
+    final pannedViewportsCountX = _delta.dx <= 0
+        ? pannedViewportsCountXRaw.floor()
+        : pannedViewportsCountXRaw.ceil();
+
+    final pannedViewportsCountYRaw =
+        _gridOffsetNotifier.value.dy / widget.viewportHeight;
+    final pannedViewportsCountY = _delta.dy <= 0
+        ? pannedViewportsCountYRaw.floor()
+        : pannedViewportsCountYRaw.ceil();
 
     // Todo: change duration based on velocity
     // print(details.velocity);
