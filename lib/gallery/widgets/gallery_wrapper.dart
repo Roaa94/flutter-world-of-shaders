@@ -54,9 +54,10 @@ class _GalleryWrapperState extends State<GalleryWrapper>
             distortionAmount = 0.0;
           });
         },
-        itemBuilder: (context, index) {
-          return const GalleryGrid();
-        },
+        children: List.generate(
+          9,
+          (index) => const GalleryGrid(),
+        ),
       ),
     );
   }

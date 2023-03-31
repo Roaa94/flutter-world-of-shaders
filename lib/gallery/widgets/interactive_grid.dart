@@ -12,20 +12,20 @@ class InteractiveGrid extends StatefulWidget {
     super.key,
     required this.viewportWidth,
     required this.viewportHeight,
-    required this.itemBuilder,
+    required this.children,
     this.itemsPerRow = 3,
-    this.itemsPerCol = 3,
     this.onScrollStart,
     this.onScrollEnd,
   });
 
   final double viewportWidth;
   final double viewportHeight;
-  final InteractiveGridItemBuilder itemBuilder;
+  final List<Widget> children;
   final int itemsPerRow;
-  final int itemsPerCol;
   final VoidCallback? onScrollStart;
   final VoidCallback? onScrollEnd;
+
+  int get itemsPerCol => (children.length / itemsPerRow).ceil();
 
   double get gridWidth => viewportWidth * itemsPerRow;
 
@@ -37,45 +37,38 @@ class InteractiveGrid extends StatefulWidget {
 
 class _InteractiveGridState extends State<InteractiveGrid> {
   Duration _animationDuration = Duration.zero;
-  Offset _gridOffset = Offset.zero;
+  final _gridOffsetNotifier = ValueNotifier<Offset>(Offset.zero);
 
   void _onScaleStart(ScaleStartDetails details) {
-    print(_gridOffset);
     widget.onScrollStart?.call();
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    // print('Scale');
-    // print(details.localFocalPoint);
-    var newOffset = _gridOffset + details.focalPointDelta;
-    print(newOffset);
-    setState(() {
-      _gridOffset = newOffset.clamp(
-        Offset(
-          -(widget.gridWidth - widget.viewportWidth),
-          -(widget.gridHeight - widget.viewportHeight),
-        ),
-        Offset.zero,
-      );
-    });
+    final newOffset = _gridOffsetNotifier.value + details.focalPointDelta;
+    // print(newOffset);
+    _gridOffsetNotifier.value = newOffset.clamp(
+      Offset(
+        -(widget.gridWidth - widget.viewportWidth),
+        -(widget.gridHeight - widget.viewportHeight),
+      ),
+      Offset.zero,
+    );
   }
 
   Future<void> _onScaleEnd(ScaleEndDetails details) async {
     final pannedViewportsCountX =
-        (_gridOffset.dx / widget.viewportWidth).round();
+        (_gridOffsetNotifier.value.dx / widget.viewportWidth).round();
     final pannedViewportsCountY =
-        (_gridOffset.dy / widget.viewportHeight).round();
+        (_gridOffsetNotifier.value.dy / widget.viewportHeight).round();
 
     // Todo: change duration based on velocity
     // print(details.velocity);
     _animationDuration = const Duration(milliseconds: 300);
 
-    setState(() {
-      _gridOffset = Offset(
-        pannedViewportsCountX * widget.viewportWidth,
-        pannedViewportsCountY * widget.viewportHeight,
-      );
-    });
+    _gridOffsetNotifier.value = Offset(
+      pannedViewportsCountX * widget.viewportWidth,
+      pannedViewportsCountY * widget.viewportHeight,
+    );
     widget.onScrollEnd?.call();
     await Future<dynamic>.delayed(_animationDuration);
     _animationDuration = Duration.zero;
@@ -100,29 +93,32 @@ class _InteractiveGridState extends State<InteractiveGrid> {
         maxHeight: double.infinity,
         maxWidth: double.infinity,
         alignment: Alignment.topLeft,
-        child: TweenAnimationBuilder(
-          duration: _animationDuration,
-          tween: Tween<Offset>(begin: Offset.zero, end: _gridOffset),
-          builder: (context, Offset offset, Widget? child) {
-            return Transform(
-              transform: Matrix4.identity()
-                ..setTranslationRaw(offset.dx, offset.dy, 0),
-              child: SizedBox(
-                width: widget.gridWidth,
-                height: widget.gridHeight,
-                child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: widget.itemsPerRow,
-                  childAspectRatio:
-                      widget.viewportWidth / widget.viewportHeight,
-                  children: List.generate(
-                    widget.itemsPerRow * widget.itemsPerCol,
-                    (index) => widget.itemBuilder(context, index),
-                  ),
-                ),
-              ),
+        child: ValueListenableBuilder(
+          valueListenable: _gridOffsetNotifier,
+          builder: (BuildContext context, Offset gridOffset, Widget? child) {
+            return TweenAnimationBuilder(
+              duration: _animationDuration,
+              tween: Tween<Offset>(begin: Offset.zero, end: gridOffset),
+              builder: (context, Offset offset, Widget? child) {
+                return Transform(
+                  transform: Matrix4.identity()
+                    ..setTranslationRaw(offset.dx, offset.dy, 0),
+                  child: child,
+                );
+              },
+              child: child,
             );
           },
+          child: SizedBox(
+            width: widget.gridWidth,
+            height: widget.gridHeight,
+            child: GridView.count(
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: widget.itemsPerRow,
+              childAspectRatio: widget.viewportWidth / widget.viewportHeight,
+              children: widget.children,
+            ),
+          ),
         ),
       ),
     );
