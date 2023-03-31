@@ -1,4 +1,5 @@
-import 'package:flutter/gestures.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 typedef InteractiveGridItemBuilder = Widget Function(
@@ -39,14 +40,23 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   Offset _gridOffset = Offset.zero;
 
   void _onScaleStart(ScaleStartDetails details) {
+    print(_gridOffset);
     widget.onScrollStart?.call();
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
     // print('Scale');
     // print(details.localFocalPoint);
+    var newOffset = _gridOffset + details.focalPointDelta;
+    print(newOffset);
     setState(() {
-      _gridOffset += details.focalPointDelta;
+      _gridOffset = newOffset.clamp(
+        Offset(
+          -(widget.gridWidth - widget.viewportWidth),
+          -(widget.gridHeight - widget.viewportHeight),
+        ),
+        Offset.zero,
+      );
     });
   }
 
@@ -56,19 +66,27 @@ class _InteractiveGridState extends State<InteractiveGrid> {
     final pannedViewportsCountY =
         (_gridOffset.dy / widget.viewportHeight).round();
 
+    // Todo: change duration based on velocity
+    // print(details.velocity);
+    _animationDuration = const Duration(milliseconds: 300);
+
     setState(() {
-      // Todo: change duration based on velocity
-      _animationDuration = const Duration(milliseconds: 300);
       _gridOffset = Offset(
         pannedViewportsCountX * widget.viewportWidth,
         pannedViewportsCountY * widget.viewportHeight,
       );
     });
-    await Future<dynamic>.delayed(Duration.zero);
-    // setState(() {
-    //   _animationDuration = Duration.zero;
-    // });
     widget.onScrollEnd?.call();
+    await Future<dynamic>.delayed(_animationDuration);
+    _animationDuration = Duration.zero;
+  }
+
+  @override
+  void initState() {
+    log('Viewport Dimensions: '
+        '(${widget.viewportWidth}, ${widget.viewportHeight})');
+    log('Grid Dimensions: (${widget.gridWidth}, ${widget.gridHeight})');
+    super.initState();
   }
 
   @override
@@ -81,12 +99,14 @@ class _InteractiveGridState extends State<InteractiveGrid> {
       child: OverflowBox(
         maxHeight: double.infinity,
         maxWidth: double.infinity,
+        alignment: Alignment.topLeft,
         child: TweenAnimationBuilder(
           duration: _animationDuration,
           tween: Tween<Offset>(begin: Offset.zero, end: _gridOffset),
           builder: (context, Offset offset, Widget? child) {
-            return Transform.translate(
-              offset: offset,
+            return Transform(
+              transform: Matrix4.identity()
+                ..setTranslationRaw(offset.dx, offset.dy, 0),
               child: SizedBox(
                 width: widget.gridWidth,
                 height: widget.gridHeight,
@@ -105,6 +125,15 @@ class _InteractiveGridState extends State<InteractiveGrid> {
           },
         ),
       ),
+    );
+  }
+}
+
+extension ClampOffset on Offset {
+  Offset clamp(Offset lowerLimit, Offset upperLimit) {
+    return Offset(
+      dx.clamp(lowerLimit.dx, upperLimit.dx),
+      dy.clamp(lowerLimit.dx, upperLimit.dy),
     );
   }
 }
