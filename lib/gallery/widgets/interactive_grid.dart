@@ -133,7 +133,7 @@ extension ClampOffset on Offset {
   Offset clamp(Offset lowerLimit, Offset upperLimit) {
     return Offset(
       dx.clamp(lowerLimit.dx, upperLimit.dx),
-      dy.clamp(lowerLimit.dx, upperLimit.dy),
+      dy.clamp(lowerLimit.dy, upperLimit.dy),
     );
   }
 }
