@@ -3,14 +3,14 @@ import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/gallery_grid.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/interactive_grid.dart';
 
-class GalleryWrapper extends StatefulWidget {
-  const GalleryWrapper({super.key});
+class InteractiveGallery extends StatefulWidget {
+  const InteractiveGallery({super.key});
 
   @override
-  State<GalleryWrapper> createState() => _GalleryWrapperState();
+  State<InteractiveGallery> createState() => _InteractiveGalleryState();
 }
 
-class _GalleryWrapperState extends State<GalleryWrapper>
+class _InteractiveGalleryState extends State<InteractiveGallery>
     with SingleTickerProviderStateMixin {
   final _distortionAmountNotifier = ValueNotifier<double>(0);
   bool _isInit = true;
