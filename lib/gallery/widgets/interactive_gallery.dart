@@ -100,8 +100,8 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
       builder: (context, double distortionAmount, Widget? child) {
         return TweenAnimationBuilder(
           tween: Tween<double>(begin: 0, end: distortionAmount),
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOutSine,
+          duration: const Duration(milliseconds: 700),
           builder: (context, double distortionAmount, Widget? child) {
             return FisheyeDistortion(
               enabled: widget.enableAntiFisheye,

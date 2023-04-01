@@ -77,7 +77,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
 
       // Todo: change duration based on velocity
       // print(details.velocity);
-      _animationDuration = const Duration(milliseconds: 300);
+      _animationDuration = const Duration(milliseconds: 500);
 
       _gridOffsetNotifier.value = Offset(
         pannedViewportsCountX * widget.viewportWidth,
@@ -112,6 +112,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
           builder: (BuildContext context, Offset gridOffset, Widget? child) {
             return TweenAnimationBuilder(
               duration: _animationDuration,
+              curve: Curves.easeOutSine,
               tween: Tween<Offset>(begin: Offset.zero, end: gridOffset),
               builder: (context, Offset offset, Widget? child) {
                 return Transform(
