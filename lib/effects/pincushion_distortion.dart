@@ -3,14 +3,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 
-class FisheyeDistortion extends StatelessWidget {
-  const FisheyeDistortion({
+class PincushionDistortion extends StatelessWidget {
+  const PincushionDistortion({
     super.key,
     required this.child,
     this.enabled = true,
     this.distortionAmount = 0,
-    // Todo: make Fisheye effect work, currently only Anti-Fisheye is implemented
-    this.isAntiFisheye = true,
     this.strength = 0.2,
   });
 
@@ -23,9 +21,6 @@ class FisheyeDistortion extends StatelessWidget {
   /// The amount of the distortion,
   /// 0 => no distortion, 1 => maximum distortion
   final double distortionAmount;
-
-  /// Whether the effect is Anti-Fisheye
-  final bool isAntiFisheye;
 
   /// The strength of the Fisheye effect
   final double strength;
@@ -40,7 +35,6 @@ class FisheyeDistortion extends StatelessWidget {
               ..setFloat(0, size.width)
               ..setFloat(1, size.height)
               ..setFloat(2, distortionAmount)
-              ..setFloat(3, strength)
               ..setImageSampler(0, image);
 
             canvas.drawRect(
@@ -52,7 +46,7 @@ class FisheyeDistortion extends StatelessWidget {
           child: child!,
         );
       },
-      assetKey: 'shaders/fisheye.glsl',
+      assetKey: 'shaders/pincushion.glsl',
       child: child,
     );
   }

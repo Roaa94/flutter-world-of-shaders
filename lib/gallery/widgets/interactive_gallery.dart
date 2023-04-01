@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
+import 'package:flutter_world_of_shaders/effects/pincushion_distortion.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/gallery_grid.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/interactive_grid.dart';
 
@@ -98,7 +98,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
           curve: Curves.easeOutSine,
           duration: const Duration(milliseconds: 700),
           builder: (context, double distortionAmount, Widget? child) {
-            return FisheyeDistortion(
+            return PincushionDistortion(
               enabled: widget.enableAntiFisheye,
               distortionAmount: distortionAmount,
               child: child!,

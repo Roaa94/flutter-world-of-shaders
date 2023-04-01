@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
+import 'package:flutter_world_of_shaders/effects/pincushion_distortion.dart';
 
-class FisheyeDistortionPage extends StatelessWidget {
-  const FisheyeDistortionPage({super.key});
+class PincushionDistortionPage extends StatelessWidget {
+  const PincushionDistortionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _FisheyeDistortionWrapperState extends State<FisheyeDistortionWrapper> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        FisheyeDistortion(
+        PincushionDistortion(
           distortionAmount: distortion,
           child: widget.child,
         ),
