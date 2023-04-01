@@ -22,19 +22,27 @@ class _GalleryGridState extends State<GalleryGrid> {
   static Random random = Random();
   static const int maxItemsPerRow = 4;
 
-  // Generates rows with a random layout based on the `widget.images` list
+  // Generates rows with a random-ish layout based on the `widget.images` list
   //
   // Example layout for a list of 5 `images` with 3 `maxItemsPerRow` value:
   // Expanded(
+  //    flex: <random>,
   //    child: Row(
   //       children: [
   //          Expanded(child: GalleryItem(imagePath: '',)),
-  //          Expanded(child: GalleryItem(imagePath: '',)),
-  //          Expanded(child: GalleryItem(imagePath: '',)),
+  //          Expanded(
+  //            child: Column(
+  //              children: [
+  //                Expanded(child: GalleryItem(imagePath: '',)),
+  //                Expanded(child: GalleryItem(imagePath: '',)),
+  //              ]
+  //            )
+  //          ),
   //       ],
   //    ),
   // ),
   // Expanded(
+  //    flex: <random>,
   //    child: Row(
   //       children: [
   //          Expanded(child: GalleryItem(imagePath: '',)),
@@ -54,9 +62,10 @@ class _GalleryGridState extends State<GalleryGrid> {
 
         var mainRowChildren = <Widget>[];
 
-        if (imageChunkIndex.isEven && imageChunk.length > 2) {
+        if (imageChunkIndex.isEven && imageChunk.length >= 3) {
           // For rows with an even index, create a layout
-          // where the last 2 or 3 items of a row
+          // where the last 2 or 3 items of a row are laid out in
+          // a further column & row segments combination
           mainRowChildren = [
             Expanded(
               child: GalleryItem(
