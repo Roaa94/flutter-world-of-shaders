@@ -7,10 +7,10 @@ import 'package:flutter_world_of_shaders/gallery/widgets/gallery_item.dart';
 class GalleryGrid extends StatefulWidget {
   const GalleryGrid({
     super.key,
-    this.images = const [],
+    this.urls = const [],
   });
 
-  final List<String> images;
+  final List<String> urls;
 
   @override
   State<GalleryGrid> createState() => _GalleryGridState();
@@ -19,7 +19,7 @@ class GalleryGrid extends StatefulWidget {
 class _GalleryGridState extends State<GalleryGrid> {
   late List<Widget> rows;
 
-  static Random random = Random();
+  static Random random = Random(4);
   static const int maxItemsPerRow = 4;
 
   // Generates rows with a random-ish layout based on the `widget.images` list
@@ -51,25 +51,25 @@ class _GalleryGridState extends State<GalleryGrid> {
   //    ),
   // ),
   List<Widget> _generateRows() {
-    // Splitting the images list into chunks of
+    // Splitting the images list into slices of
     // a maximum length of `maxItemsPerRow`
-    final chunkedImages = widget.images.slices(maxItemsPerRow).toList();
+    final slicedUrls = widget.urls.slices(maxItemsPerRow).toList();
 
     return List.generate(
-      chunkedImages.length,
-      (imageChunkIndex) {
-        final imageChunk = chunkedImages[imageChunkIndex];
+      slicedUrls.length,
+      (urlsSliceIndex) {
+        final urlsSlice = slicedUrls[urlsSliceIndex];
 
         var mainRowChildren = <Widget>[];
 
-        if (imageChunkIndex.isEven && imageChunk.length >= 3) {
+        if (urlsSliceIndex.isEven && urlsSlice.length >= 3) {
           // For rows with an even index, create a layout
           // where the last 2 or 3 items of a row are laid out in
           // a further column & row segments combination
           mainRowChildren = [
             Expanded(
               child: GalleryItem(
-                imagePath: imageChunk[0],
+                imagePath: urlsSlice[0],
               ),
             ),
             Expanded(
@@ -77,7 +77,7 @@ class _GalleryGridState extends State<GalleryGrid> {
                 children: [
                   Expanded(
                     child: GalleryItem(
-                      imagePath: imageChunk[1],
+                      imagePath: urlsSlice[1],
                     ),
                   ),
                   Expanded(
@@ -85,13 +85,13 @@ class _GalleryGridState extends State<GalleryGrid> {
                       children: [
                         Expanded(
                           child: GalleryItem(
-                            imagePath: imageChunk[2],
+                            imagePath: urlsSlice[2],
                           ),
                         ),
-                        if (imageChunk.length == 4)
+                        if (urlsSlice.length == 4)
                           Expanded(
                             child: GalleryItem(
-                              imagePath: imageChunk[3],
+                              imagePath: urlsSlice[3],
                             ),
                           ),
                       ],
@@ -103,12 +103,12 @@ class _GalleryGridState extends State<GalleryGrid> {
           ];
         } else {
           mainRowChildren = List.generate(
-            imageChunk.length,
+            urlsSlice.length,
             (imageIndex) {
               return Expanded(
                 flex: random.nextInt(3) + 1,
                 child: GalleryItem(
-                  imagePath: imageChunk[imageIndex],
+                  imagePath: urlsSlice[imageIndex],
                 ),
               );
             },
@@ -133,7 +133,7 @@ class _GalleryGridState extends State<GalleryGrid> {
 
   @override
   void didUpdateWidget(covariant GalleryGrid oldWidget) {
-    if (oldWidget.images != widget.images) {
+    if (oldWidget.urls != widget.urls) {
       rows = _generateRows();
     }
     super.didUpdateWidget(oldWidget);

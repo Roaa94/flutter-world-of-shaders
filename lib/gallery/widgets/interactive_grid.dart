@@ -16,6 +16,7 @@ class InteractiveGrid extends StatefulWidget {
     this.crossAxisCount = 3,
     this.onScrollStart,
     this.onScrollEnd,
+    this.enableSnapping = true,
   });
 
   final double viewportWidth;
@@ -24,6 +25,7 @@ class InteractiveGrid extends StatefulWidget {
   final int crossAxisCount;
   final VoidCallback? onScrollStart;
   final VoidCallback? onScrollEnd;
+  final bool enableSnapping;
 
   int get mainAxisCount => (children.length / crossAxisCount).ceil();
 
@@ -58,30 +60,32 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   }
 
   Future<void> _onScaleEnd(ScaleEndDetails details) async {
-    // print('Delta: $_delta');
-    final pannedViewportsCountXRaw =
-        _gridOffsetNotifier.value.dx / widget.viewportWidth;
-    final pannedViewportsCountX = _delta.dx <= 0
-        ? pannedViewportsCountXRaw.floor()
-        : pannedViewportsCountXRaw.ceil();
-
-    final pannedViewportsCountYRaw =
-        _gridOffsetNotifier.value.dy / widget.viewportHeight;
-    final pannedViewportsCountY = _delta.dy <= 0
-        ? pannedViewportsCountYRaw.floor()
-        : pannedViewportsCountYRaw.ceil();
-
-    // Todo: change duration based on velocity
-    // print(details.velocity);
-    _animationDuration = const Duration(milliseconds: 300);
-
-    _gridOffsetNotifier.value = Offset(
-      pannedViewportsCountX * widget.viewportWidth,
-      pannedViewportsCountY * widget.viewportHeight,
-    );
     widget.onScrollEnd?.call();
-    await Future<dynamic>.delayed(_animationDuration);
-    _animationDuration = Duration.zero;
+    if (widget.enableSnapping) {
+      // print('Delta: $_delta');
+      final pannedViewportsCountXRaw =
+          _gridOffsetNotifier.value.dx / widget.viewportWidth;
+      final pannedViewportsCountX = _delta.dx <= 0
+          ? pannedViewportsCountXRaw.floor()
+          : pannedViewportsCountXRaw.ceil();
+
+      final pannedViewportsCountYRaw =
+          _gridOffsetNotifier.value.dy / widget.viewportHeight;
+      final pannedViewportsCountY = _delta.dy <= 0
+          ? pannedViewportsCountYRaw.floor()
+          : pannedViewportsCountYRaw.ceil();
+
+      // Todo: change duration based on velocity
+      // print(details.velocity);
+      _animationDuration = const Duration(milliseconds: 300);
+
+      _gridOffsetNotifier.value = Offset(
+        pannedViewportsCountX * widget.viewportWidth,
+        pannedViewportsCountY * widget.viewportHeight,
+      );
+      await Future<dynamic>.delayed(_animationDuration);
+      _animationDuration = Duration.zero;
+    }
   }
 
   @override
