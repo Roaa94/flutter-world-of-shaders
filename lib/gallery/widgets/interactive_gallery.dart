@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
@@ -32,8 +30,6 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   bool _isInit = true;
   late List<Widget> viewports;
 
-  static Random random = Random(5);
-
   List<Widget> _generateViewports() {
     final slicedUrls = widget.urls.slices(widget.maxItemsPerViewport).toList();
 
@@ -43,7 +39,6 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
         final urlsChunk = slicedUrls[urlsSliceIndex];
 
         return GalleryGrid(
-          random: random,
           index: urlsSliceIndex,
           urls: urlsChunk.toList(),
         );

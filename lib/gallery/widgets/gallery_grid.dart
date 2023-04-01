@@ -8,12 +8,10 @@ class GalleryGrid extends StatefulWidget {
   const GalleryGrid({
     super.key,
     this.urls = const [],
-    required this.random,
     required this.index,
   });
 
   final List<String> urls;
-  final Random random;
   final int index;
 
   @override
@@ -24,7 +22,7 @@ class _GalleryGridState extends State<GalleryGrid> {
   late List<Widget> rows;
 
   static const int maxItemsPerRow = 4;
-
+  static Random random = Random(12);
   // Generates rows with a random-ish layout based on the `widget.images` list
   //
   // Example layout for a list of 5 `images` with 3 `maxItemsPerRow` value:
@@ -80,7 +78,7 @@ class _GalleryGridState extends State<GalleryGrid> {
               child: Column(
                 children: [
                   Expanded(
-                    flex: widget.random.nextInt(2) + 1,
+                    flex: random.nextInt(2) + 1,
                     child: GalleryItem(
                       heroTag: '__hero_${urlsSliceIndex}_1_'
                           'grid_${widget.index}__',
@@ -117,7 +115,7 @@ class _GalleryGridState extends State<GalleryGrid> {
             urlsSlice.length,
             (imageIndex) {
               return Expanded(
-                flex: widget.random.nextInt(2) + 1,
+                flex: random.nextInt(2) + 1,
                 child: GalleryItem(
                   heroTag: '__hero_${urlsSliceIndex}_$imageIndex'
                       '_grid_${widget.index}__}',
@@ -129,7 +127,7 @@ class _GalleryGridState extends State<GalleryGrid> {
         }
 
         return Expanded(
-          flex: urlsSliceIndex.isOdd ? 1 : widget.random.nextInt(3) + 1,
+          flex: urlsSliceIndex.isOdd ? 1 : random.nextInt(3) + 1,
           child: Row(
             children: mainRowChildren,
           ),

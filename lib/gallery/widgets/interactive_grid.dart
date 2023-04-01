@@ -62,7 +62,6 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   Future<void> _onScaleEnd(ScaleEndDetails details) async {
     widget.onScrollEnd?.call();
     if (widget.enableSnapping) {
-      // print('Delta: $_delta');
       final pannedViewportsCountXRaw =
           _gridOffsetNotifier.value.dx / widget.viewportWidth;
       final pannedViewportsCountX = _delta.dx <= 0
@@ -75,8 +74,6 @@ class _InteractiveGridState extends State<InteractiveGrid> {
           ? pannedViewportsCountYRaw.floor()
           : pannedViewportsCountYRaw.ceil();
 
-      // Todo: change duration based on velocity
-      // print(details.velocity);
       _animationDuration = const Duration(milliseconds: 500);
 
       _gridOffsetNotifier.value = Offset(
