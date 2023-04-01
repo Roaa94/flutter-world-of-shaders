@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_world_of_shaders/effects/fisheye_distortion.dart';
@@ -8,15 +10,17 @@ class InteractiveGallery extends StatefulWidget {
   const InteractiveGallery({
     super.key,
     this.urls = const [],
-    this.viewportsCrossAxisCount = 3,
     this.enableSnapping = true,
     this.enableAntiFisheye = true,
+    this.size = 3,
   });
 
   final List<String> urls;
-  final int viewportsCrossAxisCount;
+  final int size;
   final bool enableSnapping;
   final bool enableAntiFisheye;
+
+  int get maxItemsPerViewport => (urls.length / (size * size)).floor();
 
   @override
   State<InteractiveGallery> createState() => _InteractiveGalleryState();
@@ -28,10 +32,10 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   bool _isInit = true;
   late List<Widget> viewports;
 
-  static const int maxItemsPerViewport = 11;
+  static Random random = Random(9);
 
   List<Widget> _generateViewports() {
-    final slicedUrls = widget.urls.slices(maxItemsPerViewport).toList();
+    final slicedUrls = widget.urls.slices(widget.maxItemsPerViewport).toList();
 
     return List.generate(
       slicedUrls.length,
@@ -39,6 +43,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
         final urlsChunk = slicedUrls[urlsSliceIndex];
 
         return GalleryGrid(
+          random: random,
           urls: urlsChunk.toList(),
         );
       },
@@ -65,8 +70,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
 
   @override
   void didUpdateWidget(covariant InteractiveGallery oldWidget) {
-    if (oldWidget.urls != widget.urls ||
-        oldWidget.viewportsCrossAxisCount != widget.viewportsCrossAxisCount) {
+    if (oldWidget.urls != widget.urls || oldWidget.size != widget.size) {
       viewports = _generateViewports();
     }
     super.didUpdateWidget(oldWidget);
@@ -79,7 +83,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
     final grid = InteractiveGrid(
       viewportWidth: screenSize.width,
       viewportHeight: screenSize.height,
-      crossAxisCount: widget.viewportsCrossAxisCount,
+      crossAxisCount: widget.size,
       enableSnapping: widget.enableSnapping,
       onScrollStart: () {
         _distortionAmountNotifier.value = 0.9;

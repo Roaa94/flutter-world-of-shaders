@@ -4,15 +4,17 @@ import 'package:flutter_world_of_shaders/gallery/widgets/interactive_gallery.dar
 class GalleryPage extends StatelessWidget {
   const GalleryPage({super.key});
 
+  static List<String> images = List.generate(
+    97,
+    (index) => 'assets/gallery/trevi-fountain-thumb.png',
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: InteractiveGallery(
-        urls: List.generate(
-          99,
-          (index) => 'assets/gallery/trevi-fountain-thumb.png',
-        ),
+        urls: images,
       ),
     );
   }
