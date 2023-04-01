@@ -12,7 +12,7 @@ class GalleryWrapper extends StatefulWidget {
 
 class _GalleryWrapperState extends State<GalleryWrapper>
     with SingleTickerProviderStateMixin {
-  double distortionAmount = 0;
+  final _distortionAmountNotifier = ValueNotifier<double>(0);
   bool _isInit = true;
 
   @override
@@ -31,28 +31,30 @@ class _GalleryWrapperState extends State<GalleryWrapper>
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 0, end: distortionAmount),
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 500),
+    return ValueListenableBuilder(
+      valueListenable: _distortionAmountNotifier,
       builder: (context, double distortionAmount, Widget? child) {
-        return FisheyeDistortion(
-          distortionAmount: distortionAmount,
-          child: child!,
+        return TweenAnimationBuilder(
+          tween: Tween<double>(begin: 0, end: distortionAmount),
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 500),
+          builder: (context, double distortionAmount, Widget? child) {
+            return FisheyeDistortion(
+              distortionAmount: distortionAmount,
+              child: child!,
+            );
+          },
+          child: child,
         );
       },
       child: InteractiveGrid(
         viewportWidth: screenSize.width,
         viewportHeight: screenSize.height,
         onScrollStart: () {
-          setState(() {
-            distortionAmount = 0.9;
-          });
+          _distortionAmountNotifier.value = 0.9;
         },
         onScrollEnd: () {
-          setState(() {
-            distortionAmount = 0.0;
-          });
+          _distortionAmountNotifier.value = 0.0;
         },
         children: List.generate(
           9,

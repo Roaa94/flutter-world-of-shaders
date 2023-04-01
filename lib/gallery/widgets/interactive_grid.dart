@@ -13,7 +13,7 @@ class InteractiveGrid extends StatefulWidget {
     required this.viewportWidth,
     required this.viewportHeight,
     required this.children,
-    this.itemsPerRow = 3,
+    this.crossAxisCount = 3,
     this.onScrollStart,
     this.onScrollEnd,
   });
@@ -21,15 +21,15 @@ class InteractiveGrid extends StatefulWidget {
   final double viewportWidth;
   final double viewportHeight;
   final List<Widget> children;
-  final int itemsPerRow;
+  final int crossAxisCount;
   final VoidCallback? onScrollStart;
   final VoidCallback? onScrollEnd;
 
-  int get itemsPerCol => (children.length / itemsPerRow).ceil();
+  int get mainAxisCount => (children.length / crossAxisCount).ceil();
 
-  double get gridWidth => viewportWidth * itemsPerRow;
+  double get gridWidth => viewportWidth * crossAxisCount;
 
-  double get gridHeight => viewportHeight * itemsPerCol;
+  double get gridHeight => viewportHeight * mainAxisCount;
 
   @override
   State<InteractiveGrid> createState() => _InteractiveGridState();
@@ -58,7 +58,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   }
 
   Future<void> _onScaleEnd(ScaleEndDetails details) async {
-    print('Delta: $_delta');
+    // print('Delta: $_delta');
     final pannedViewportsCountXRaw =
         _gridOffsetNotifier.value.dx / widget.viewportWidth;
     final pannedViewportsCountX = _delta.dx <= 0
@@ -124,7 +124,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
             height: widget.gridHeight,
             child: GridView.count(
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: widget.itemsPerRow,
+              crossAxisCount: widget.crossAxisCount,
               childAspectRatio: widget.viewportWidth / widget.viewportHeight,
               children: widget.children,
             ),
