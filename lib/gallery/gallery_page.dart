@@ -5,7 +5,7 @@ class GalleryPage extends StatelessWidget {
   const GalleryPage({super.key});
 
   static List<String> images = List.generate(
-    97,
+    44,
     (index) => 'assets/gallery/trevi-fountain-thumb.png',
   );
 

@@ -9,10 +9,12 @@ class GalleryGrid extends StatefulWidget {
     super.key,
     this.urls = const [],
     required this.random,
+    required this.index,
   });
 
   final List<String> urls;
   final Random random;
+  final int index;
 
   @override
   State<GalleryGrid> createState() => _GalleryGridState();
@@ -70,6 +72,7 @@ class _GalleryGridState extends State<GalleryGrid> {
           mainRowChildren = [
             Expanded(
               child: GalleryItem(
+                heroTag: '__hero_${urlsSliceIndex}_0_grid_${widget.index}__',
                 imagePath: urlsSlice[0],
               ),
             ),
@@ -79,6 +82,8 @@ class _GalleryGridState extends State<GalleryGrid> {
                   Expanded(
                     flex: widget.random.nextInt(2) + 1,
                     child: GalleryItem(
+                      heroTag: '__hero_${urlsSliceIndex}_1_'
+                          'grid_${widget.index}__',
                       imagePath: urlsSlice[1],
                     ),
                   ),
@@ -87,12 +92,16 @@ class _GalleryGridState extends State<GalleryGrid> {
                       children: [
                         Expanded(
                           child: GalleryItem(
+                            heroTag: '__hero_${urlsSliceIndex}_2_'
+                                'grid_${widget.index}__',
                             imagePath: urlsSlice[2],
                           ),
                         ),
                         if (urlsSlice.length == 4)
                           Expanded(
                             child: GalleryItem(
+                              heroTag: '__hero_${urlsSliceIndex}_3_'
+                                  'grid_${widget.index}__',
                               imagePath: urlsSlice[3],
                             ),
                           ),
@@ -110,6 +119,8 @@ class _GalleryGridState extends State<GalleryGrid> {
               return Expanded(
                 flex: widget.random.nextInt(2) + 1,
                 child: GalleryItem(
+                  heroTag: '__hero_${urlsSliceIndex}_$imageIndex'
+                      '_grid_${widget.index}__}',
                   imagePath: urlsSlice[imageIndex],
                 ),
               );

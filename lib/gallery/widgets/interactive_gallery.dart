@@ -12,7 +12,7 @@ class InteractiveGallery extends StatefulWidget {
     this.urls = const [],
     this.enableSnapping = true,
     this.enableAntiFisheye = true,
-    this.size = 3,
+    this.size = 2,
   });
 
   final List<String> urls;
@@ -32,7 +32,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   bool _isInit = true;
   late List<Widget> viewports;
 
-  static Random random = Random(9);
+  static Random random = Random(5);
 
   List<Widget> _generateViewports() {
     final slicedUrls = widget.urls.slices(widget.maxItemsPerViewport).toList();
@@ -44,6 +44,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
 
         return GalleryGrid(
           random: random,
+          index: urlsSliceIndex,
           urls: urlsChunk.toList(),
         );
       },
