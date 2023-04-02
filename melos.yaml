@@ -1,0 +1,5 @@
+name: flutter_world_of_shaders
+
+packages:
+  - packages/*
+  - examples/*

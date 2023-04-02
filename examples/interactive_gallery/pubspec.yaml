@@ -1,0 +1,33 @@
+name: interactive_gallery
+description: Interactive gallery with shader distortion effect
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  cached_network_image: ^3.2.3
+  collection: ^1.17.0
+  cupertino_icons: ^1.0.5
+  flutter:
+    sdk: flutter
+  flutter_shaders: ^0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^4.0.0+1
+
+flutter:
+  uses-material-design: true
+  shaders:
+    - shaders/playground/playground.glsl
+    - shaders/playground/fence.glsl
+    - shaders/shader_toy_examples/example_1.glsl
+    - shaders/playground/rectangle.glsl
+    - shaders/pincushion.glsl
+
+  assets:
+    - assets/
+    - assets/gallery/
