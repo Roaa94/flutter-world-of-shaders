@@ -69,6 +69,7 @@ Route<dynamic> createFadeInRoute({required RoutePageBuilder routePageBuilder}) {
     transitionDuration: const Duration(milliseconds: 400),
     reverseTransitionDuration: const Duration(milliseconds: 400),
     pageBuilder: routePageBuilder,
+    maintainState: false,
     transitionsBuilder: (
       BuildContext context,
       Animation<double> animation,

@@ -7,18 +7,18 @@ import 'package:flutter_world_of_shaders/gallery/widgets/interactive_grid.dart';
 class InteractiveGallery extends StatefulWidget {
   const InteractiveGallery({
     super.key,
-    this.urls = const [],
+    this.images = const [],
     this.enableSnapping = true,
     this.enableAntiFisheye = true,
     this.size = 2,
   });
 
-  final List<String> urls;
+  final List<String> images;
   final int size;
   final bool enableSnapping;
   final bool enableAntiFisheye;
 
-  int get maxItemsPerViewport => (urls.length / (size * size)).floor();
+  int get maxItemsPerViewport => (images.length / (size * size)).floor();
 
   @override
   State<InteractiveGallery> createState() => _InteractiveGalleryState();
@@ -27,11 +27,11 @@ class InteractiveGallery extends StatefulWidget {
 class _InteractiveGalleryState extends State<InteractiveGallery>
     with SingleTickerProviderStateMixin {
   final _distortionAmountNotifier = ValueNotifier<double>(0);
-  bool _isInit = true;
   late List<Widget> viewports;
 
   List<Widget> _generateViewports() {
-    final slicedUrls = widget.urls.slices(widget.maxItemsPerViewport).toList();
+    final slicedUrls =
+        widget.images.slices(widget.maxItemsPerViewport).toList();
 
     return List.generate(
       slicedUrls.length,
@@ -53,20 +53,8 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   }
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      precacheImage(
-        Image.asset('assets/gallery/trevi-fountain-thumb.png').image,
-        context,
-      );
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-
-  @override
   void didUpdateWidget(covariant InteractiveGallery oldWidget) {
-    if (oldWidget.urls != widget.urls || oldWidget.size != widget.size) {
+    if (oldWidget.images != widget.images || oldWidget.size != widget.size) {
       viewports = _generateViewports();
     }
     super.didUpdateWidget(oldWidget);
