@@ -17,6 +17,7 @@ class InteractiveGrid extends StatefulWidget {
     this.onScrollStart,
     this.onScrollEnd,
     this.enableSnapping = true,
+    required this.snapDuration,
   });
 
   final double viewportWidth;
@@ -26,6 +27,7 @@ class InteractiveGrid extends StatefulWidget {
   final VoidCallback? onScrollStart;
   final VoidCallback? onScrollEnd;
   final bool enableSnapping;
+  final Duration snapDuration;
 
   int get mainAxisCount => (children.length / crossAxisCount).ceil();
 
@@ -49,7 +51,6 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   void _onScaleUpdate(ScaleUpdateDetails details) {
     _delta = details.focalPointDelta;
     final newOffset = _gridOffsetNotifier.value + details.focalPointDelta;
-    // print(newOffset);
     _gridOffsetNotifier.value = newOffset.clamp(
       Offset(
         -(widget.gridWidth - widget.viewportWidth),
@@ -74,7 +75,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
           ? pannedViewportsCountYRaw.floor()
           : pannedViewportsCountYRaw.ceil();
 
-      _animationDuration = const Duration(milliseconds: 500);
+      _animationDuration = widget.snapDuration;
 
       _gridOffsetNotifier.value = Offset(
         pannedViewportsCountX * widget.viewportWidth,

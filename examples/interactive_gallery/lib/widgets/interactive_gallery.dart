@@ -28,6 +28,13 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
     with SingleTickerProviderStateMixin {
   final _distortionAmountNotifier = ValueNotifier<double>(0);
   late List<Widget> viewports;
+  static const Duration addDistortionDuration = Duration(milliseconds: 300);
+  static const Duration removeDistortionDuration = Duration(milliseconds: 800);
+  static Duration snapDuration = Duration(
+    milliseconds: removeDistortionDuration.inMilliseconds - 100,
+  );
+
+  Duration _distortionDuration = addDistortionDuration;
 
   List<Widget> _generateViewports() {
     final slicedChildren =
@@ -44,6 +51,17 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
         );
       },
     );
+  }
+
+  void _onGridInteractionStart() {
+    _distortionAmountNotifier.value = 0.9;
+  }
+
+  Future<void> _onGridInteractionEnd() async {
+    _distortionDuration = removeDistortionDuration;
+    _distortionAmountNotifier.value = 0.0;
+    await Future<dynamic>.delayed(_distortionDuration);
+    _distortionDuration = addDistortionDuration;
   }
 
   @override
@@ -69,12 +87,9 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
       viewportHeight: screenSize.height,
       crossAxisCount: widget.size,
       enableSnapping: widget.enableSnapping,
-      onScrollStart: () {
-        _distortionAmountNotifier.value = 0.9;
-      },
-      onScrollEnd: () {
-        _distortionAmountNotifier.value = 0.0;
-      },
+      onScrollStart: _onGridInteractionStart,
+      onScrollEnd: _onGridInteractionEnd,
+      snapDuration: snapDuration,
       children: viewports,
     );
 
@@ -84,7 +99,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
         return TweenAnimationBuilder(
           tween: Tween<double>(begin: 0, end: distortionAmount),
           curve: Curves.easeOutSine,
-          duration: const Duration(milliseconds: 700),
+          duration: _distortionDuration,
           builder: (context, double distortionAmount, Widget? child) {
             return PincushionDistortion(
               enabled: widget.enableDistortion,

@@ -13,7 +13,6 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.black,
       extendBody: true,
       body: InteractiveGallery(
-        enableDistortion: false,
         children: List.generate(
           images.length,
           (index) => GestureDetector(
