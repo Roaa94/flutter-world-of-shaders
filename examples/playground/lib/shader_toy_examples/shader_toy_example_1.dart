@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
-import 'package:interactive_gallery/shader_toy_examples/shader_painter.dart';
+import 'package:playground/shader_toy_examples/shader_painter.dart';
 
 class ShaderToyExample1 extends StatefulWidget {
   const ShaderToyExample1({super.key});

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/playground/shader_painter.dart';
+import 'package:playground/playground/shader_painter.dart';
 
 class RawShader extends StatefulWidget {
   const RawShader({super.key});

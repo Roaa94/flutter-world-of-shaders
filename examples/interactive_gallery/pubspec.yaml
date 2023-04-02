@@ -8,7 +8,9 @@ environment:
 
 dependencies:
   cached_network_image: ^3.2.3
-  collection: ^1.17.1
+  collection: ^1.17.0
+  core:
+    path: ../../packages/core
   cupertino_icons: ^1.0.5
   flutter:
     sdk: flutter
@@ -21,13 +23,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  shaders:
-    - shaders/playground/playground.glsl
-    - shaders/playground/fence.glsl
-    - shaders/shader_toy_examples/example_1.glsl
-    - shaders/playground/rectangle.glsl
-    - shaders/pincushion.glsl
-
   assets:
     - assets/
     - assets/gallery/
+  shaders:
+    - shaders/pincushion.glsl

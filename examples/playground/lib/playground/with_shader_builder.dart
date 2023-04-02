@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
-import 'package:interactive_gallery/playground/shader_painter.dart';
+import 'package:playground/playground/shader_painter.dart';
 
 class WithShaderBuilder extends StatelessWidget {
   const WithShaderBuilder({super.key});

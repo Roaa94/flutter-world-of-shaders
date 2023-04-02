@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/gallery/widgets/gallery_item.dart';
+import 'package:interactive_gallery/widgets/gallery_item.dart';
 
 class GalleryItemPage extends StatelessWidget {
   const GalleryItemPage({

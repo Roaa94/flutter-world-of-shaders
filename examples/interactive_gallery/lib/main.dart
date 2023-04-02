@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/gallery/gallery_page.dart';
+import 'package:interactive_gallery/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,12 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter World of Shaders',
+      title: 'Interactive Gallery',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const GalleryPage(),
+      home: const HomePage(),
     );
   }
 }

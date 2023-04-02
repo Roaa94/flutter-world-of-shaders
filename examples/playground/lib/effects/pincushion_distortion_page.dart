@@ -1,5 +1,5 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/effects/pincushion_distortion.dart';
 
 class PincushionDistortionPage extends StatelessWidget {
   const PincushionDistortionPage({super.key});

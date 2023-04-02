@@ -41,6 +41,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  core:
+    dependency: "direct main"
+    description:
+      path: "../../packages/core"
+      relative: true
+    source: path
+    version: "0.1.0+1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -62,14 +69,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_lints:
-    dependency: "direct dev"
+  flutter_shaders:
+    dependency: "direct main"
     description:
-      name: flutter_lints
-      sha256: aeb0b80a8b3709709c9cc496cdc027c5b3216796bc0af0ce1007eaf24464fd4c
+      name: flutter_shaders
+      sha256: "08b990b6c234553784624f39d2db9d6b50275eb0d550baa061089dd1cdbbab9c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "0.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -83,14 +90,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
-  lints:
-    dependency: transitive
-    description:
-      name: lints
-      sha256: "5e4a9cd06d447758280a8ac2405101e0e2094d2a1dbdd3756aec3fe7775ba593"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   matcher:
     dependency: transitive
     description:
@@ -184,5 +183,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  very_good_analysis:
+    dependency: "direct dev"
+    description:
+      name: very_good_analysis
+      sha256: ebc48c51db35beeeec8c414e32f7bd78e612bd7f5992ccb0d46e19edaeb40b08
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0+1"
 sdks:
   dart: ">=2.19.5 <3.0.0"
+  flutter: ">=3.7.0-0.0"

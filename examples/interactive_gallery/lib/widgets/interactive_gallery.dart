@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/effects/pincushion_distortion.dart';
-import 'package:interactive_gallery/gallery/widgets/gallery_grid.dart';
-import 'package:interactive_gallery/gallery/widgets/interactive_grid.dart';
+import 'package:interactive_gallery/widgets/gallery_grid.dart';
+import 'package:interactive_gallery/widgets/interactive_grid.dart';
 
 class InteractiveGallery extends StatefulWidget {
   const InteractiveGallery({

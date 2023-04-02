@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/playground/shapes_shaders.dart';
+import 'package:playground/playground/shapes_shaders.dart';
 
 class PlaygroundPage extends StatelessWidget {
   const PlaygroundPage({super.key});
