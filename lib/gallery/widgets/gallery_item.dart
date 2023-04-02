@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/gallery_item_page.dart';
 
@@ -8,12 +9,14 @@ class GalleryItem extends StatelessWidget {
     required this.heroTag,
     this.heroEnabled = true,
     this.isPage = false,
+    this.isAsset = false,
   });
 
   final String imagePath;
   final String heroTag;
   final bool heroEnabled;
   final bool isPage;
+  final bool isAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +55,15 @@ class GalleryItem extends StatelessWidget {
             child: SizedBox(
               width: screenSize.width,
               height: screenSize.height,
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-              ),
+              child: isAsset
+                  ? Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: imagePath,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
         ),

@@ -124,11 +124,14 @@ class _InteractiveGridState extends State<InteractiveGrid> {
           child: SizedBox(
             width: widget.gridWidth,
             height: widget.gridHeight,
-            child: GridView.count(
+            child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: widget.crossAxisCount,
-              childAspectRatio: widget.viewportWidth / widget.viewportHeight,
-              children: widget.children,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: widget.crossAxisCount,
+                childAspectRatio: widget.viewportWidth / widget.viewportHeight,
+              ),
+              itemCount: widget.children.length,
+              itemBuilder: (context, index) => widget.children[index],
             ),
           ),
         ),
