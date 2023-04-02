@@ -2,16 +2,15 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_world_of_shaders/gallery/widgets/gallery_item.dart';
 
 class GalleryGrid extends StatefulWidget {
   const GalleryGrid({
     super.key,
-    this.urls = const [],
+    this.children = const [],
     required this.index,
   });
 
-  final List<String> urls;
+  final List<Widget> children;
   final int index;
 
   @override
@@ -21,8 +20,8 @@ class GalleryGrid extends StatefulWidget {
 class _GalleryGridState extends State<GalleryGrid> {
   late List<Widget> rows;
 
-  static const int maxItemsPerRow = 4;
-  static Random random = Random(12);
+  static const int maxItemsPerRow = 3;
+  static Random random = Random(5);
   // Generates rows with a random-ish layout based on the `widget.images` list
   //
   // Example layout for a list of 5 `images` with 3 `maxItemsPerRow` value:
@@ -54,54 +53,39 @@ class _GalleryGridState extends State<GalleryGrid> {
   List<Widget> _generateRows() {
     // Splitting the images list into slices of
     // a maximum length of `maxItemsPerRow`
-    final slicedUrls = widget.urls.slices(maxItemsPerRow).toList();
+    final slicedChildren = widget.children.slices(maxItemsPerRow).toList();
 
     return List.generate(
-      slicedUrls.length,
-      (urlsSliceIndex) {
-        final urlsSlice = slicedUrls[urlsSliceIndex];
+      slicedChildren.length,
+      (childrenSliceIndex) {
+        final childrenSlice = slicedChildren[childrenSliceIndex];
 
         var mainRowChildren = <Widget>[];
 
-        if (urlsSliceIndex.isEven && urlsSlice.length >= 3) {
+        if (childrenSliceIndex.isEven && childrenSlice.length >= 3) {
           // For rows with an even index, create a layout
           // where the last 2 or 3 items of a row are laid out in
           // a further column & row segments combination
           mainRowChildren = [
             Expanded(
-              child: GalleryItem(
-                heroTag: '__hero_${urlsSliceIndex}_0_grid_${widget.index}__',
-                imagePath: urlsSlice[0],
-              ),
+              child: childrenSlice[0],
             ),
             Expanded(
               child: Column(
                 children: [
                   Expanded(
                     flex: random.nextInt(2) + 1,
-                    child: GalleryItem(
-                      heroTag: '__hero_${urlsSliceIndex}_1_'
-                          'grid_${widget.index}__',
-                      imagePath: urlsSlice[1],
-                    ),
+                    child: childrenSlice[1],
                   ),
                   Expanded(
                     child: Row(
                       children: [
                         Expanded(
-                          child: GalleryItem(
-                            heroTag: '__hero_${urlsSliceIndex}_2_'
-                                'grid_${widget.index}__',
-                            imagePath: urlsSlice[2],
-                          ),
+                          child: childrenSlice[2],
                         ),
-                        if (urlsSlice.length == 4)
+                        if (childrenSlice.length == 4)
                           Expanded(
-                            child: GalleryItem(
-                              heroTag: '__hero_${urlsSliceIndex}_3_'
-                                  'grid_${widget.index}__',
-                              imagePath: urlsSlice[3],
-                            ),
+                            child: childrenSlice[3],
                           ),
                       ],
                     ),
@@ -112,22 +96,18 @@ class _GalleryGridState extends State<GalleryGrid> {
           ];
         } else {
           mainRowChildren = List.generate(
-            urlsSlice.length,
+            childrenSlice.length,
             (imageIndex) {
               return Expanded(
                 flex: random.nextInt(2) + 1,
-                child: GalleryItem(
-                  heroTag: '__hero_${urlsSliceIndex}_$imageIndex'
-                      '_grid_${widget.index}__}',
-                  imagePath: urlsSlice[imageIndex],
-                ),
+                child: childrenSlice[imageIndex],
               );
             },
           );
         }
 
         return Expanded(
-          flex: urlsSliceIndex.isOdd ? 1 : random.nextInt(3) + 1,
+          flex: childrenSliceIndex.isOdd ? 1 : random.nextInt(3) + 1,
           child: Row(
             children: mainRowChildren,
           ),
@@ -144,7 +124,7 @@ class _GalleryGridState extends State<GalleryGrid> {
 
   @override
   void didUpdateWidget(covariant GalleryGrid oldWidget) {
-    if (oldWidget.urls != widget.urls) {
+    if (oldWidget.children != widget.children) {
       rows = _generateRows();
     }
     super.didUpdateWidget(oldWidget);

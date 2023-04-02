@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_world_of_shaders/gallery/images.dart';
-import 'package:flutter_world_of_shaders/gallery/widgets/gallery_grid.dart';
+import 'package:flutter_world_of_shaders/gallery/widgets/gallery_item.dart';
 import 'package:flutter_world_of_shaders/gallery/widgets/interactive_gallery.dart';
 
 class GalleryPage extends StatefulWidget {
@@ -13,10 +13,17 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
+      extendBody: true,
       body: InteractiveGallery(
-        images: images,
+        children: List.generate(
+          images.take(32).toList().length,
+          (index) => GalleryItem(
+            heroTag: '__hero_${index}__',
+            imagePath: images[index],
+          ),
+        ),
       ),
     );
   }

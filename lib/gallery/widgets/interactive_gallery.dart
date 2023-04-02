@@ -7,18 +7,18 @@ import 'package:flutter_world_of_shaders/gallery/widgets/interactive_grid.dart';
 class InteractiveGallery extends StatefulWidget {
   const InteractiveGallery({
     super.key,
-    this.images = const [],
+    this.children = const [],
     this.enableSnapping = true,
-    this.enableAntiFisheye = true,
+    this.enableDistortion = true,
     this.size = 2,
   });
 
-  final List<String> images;
+  final List<Widget> children;
   final int size;
   final bool enableSnapping;
-  final bool enableAntiFisheye;
+  final bool enableDistortion;
 
-  int get maxItemsPerViewport => (images.length / (size * size)).floor();
+  int get maxItemsPerViewport => (children.length / (size * size)).floor();
 
   @override
   State<InteractiveGallery> createState() => _InteractiveGalleryState();
@@ -30,17 +30,17 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   late List<Widget> viewports;
 
   List<Widget> _generateViewports() {
-    final slicedUrls =
-        widget.images.slices(widget.maxItemsPerViewport).toList();
+    final slicedChildren =
+        widget.children.slices(widget.maxItemsPerViewport).toList();
 
     return List.generate(
-      slicedUrls.length,
+      slicedChildren.length,
       (urlsSliceIndex) {
-        final urlsChunk = slicedUrls[urlsSliceIndex];
+        final childrenSlice = slicedChildren[urlsSliceIndex];
 
         return GalleryGrid(
           index: urlsSliceIndex,
-          urls: urlsChunk.toList(),
+          children: childrenSlice.toList(),
         );
       },
     );
@@ -54,7 +54,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
 
   @override
   void didUpdateWidget(covariant InteractiveGallery oldWidget) {
-    if (oldWidget.images != widget.images || oldWidget.size != widget.size) {
+    if (oldWidget.size != widget.size) {
       viewports = _generateViewports();
     }
     super.didUpdateWidget(oldWidget);
@@ -87,7 +87,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
           duration: const Duration(milliseconds: 700),
           builder: (context, double distortionAmount, Widget? child) {
             return PincushionDistortion(
-              enabled: widget.enableAntiFisheye,
+              enabled: widget.enableDistortion,
               distortionAmount: distortionAmount,
               child: child!,
             );
