@@ -20,8 +20,8 @@ class GalleryGrid extends StatefulWidget {
 class _GalleryGridState extends State<GalleryGrid> {
   late List<Widget> rows;
 
-  static const int maxItemsPerRow = 3;
-  static Random random = Random(5);
+  static const int maxItemsPerRow = 4;
+  static Random random = Random(3);
   // Generates rows with a random-ish layout based on the `widget.images` list
   //
   // Example layout for a list of 5 `images` with 3 `maxItemsPerRow` value:

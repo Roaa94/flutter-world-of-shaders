@@ -22,72 +22,31 @@ class GalleryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return GestureDetector(
-      onTap: isPage
-          ? null
-          : () {
-              Navigator.of(context).push(
-                createFadeInRoute(
-                  routePageBuilder: (
-                    BuildContext context,
-                    Animation<double> animation,
-                    _,
-                  ) {
-                    return GalleryItemPage(
-                      heroTag: heroTag,
-                      imagePath: imagePath,
-                    );
-                  },
-                ),
-              );
-            },
-      child: HeroMode(
-        enabled: heroEnabled,
-        child: Hero(
-          tag: heroTag,
-          child: Container(
-            margin: const EdgeInsets.all(3),
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: SizedBox(
-              width: screenSize.width,
-              height: screenSize.height,
-              child: isAsset
-                  ? Image.asset(
-                      imagePath,
-                      fit: BoxFit.cover,
-                    )
-                  : CachedNetworkImage(
-                      imageUrl: imagePath,
-                      fit: BoxFit.cover,
-                    ),
-            ),
+    return HeroMode(
+      enabled: heroEnabled,
+      child: Hero(
+        tag: heroTag,
+        child: Container(
+          margin: const EdgeInsets.all(3),
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SizedBox(
+            width: screenSize.width,
+            height: screenSize.height,
+            child: isAsset
+                ? Image.asset(
+                    imagePath,
+                    fit: BoxFit.cover,
+                  )
+                : CachedNetworkImage(
+                    imageUrl: imagePath,
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
       ),
     );
   }
-}
-
-Route<dynamic> createFadeInRoute({required RoutePageBuilder routePageBuilder}) {
-  return PageRouteBuilder(
-    transitionDuration: const Duration(milliseconds: 400),
-    reverseTransitionDuration: const Duration(milliseconds: 400),
-    pageBuilder: routePageBuilder,
-    maintainState: false,
-    transitionsBuilder: (
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child,
-    ) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
-      );
-    },
-  );
 }
