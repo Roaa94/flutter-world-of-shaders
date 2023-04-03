@@ -8,14 +8,12 @@ class ImageGalleryItem extends StatelessWidget {
     required this.imagePath,
     required this.heroTag,
     this.heroEnabled = true,
-    this.isPage = false,
     this.isAsset = false,
   });
 
   final String imagePath;
   final String heroTag;
   final bool heroEnabled;
-  final bool isPage;
   final bool isAsset;
 
   @override
