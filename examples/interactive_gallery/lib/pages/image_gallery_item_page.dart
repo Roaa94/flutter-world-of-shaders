@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 
-class GalleryItemPage extends StatelessWidget {
-  const GalleryItemPage({
+class ImageGalleryItemPage extends StatelessWidget {
+  const ImageGalleryItemPage({
     super.key,
     required this.imagePath,
     required this.heroTag,

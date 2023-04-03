@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/pages/gallery_item_page.dart';
+import 'package:interactive_gallery/pages/image_gallery_item_page.dart';
 import 'package:interactive_gallery/utils/images.dart';
 import 'package:interactive_gallery/utils/routes.dart';
 import 'package:interactive_gallery/widgets/image_gallery_item.dart';
@@ -25,7 +25,7 @@ class ImageGalleryPage extends StatelessWidget {
                     Animation<double> animation,
                     _,
                   ) {
-                    return GalleryItemPage(
+                    return ImageGalleryItemPage(
                       heroTag: '__hero_${index}__',
                       imagePath: images[index],
                     );
