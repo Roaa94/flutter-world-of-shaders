@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interactive_gallery/pages/gallery_item_page.dart';
 import 'package:interactive_gallery/utils/images.dart';
+import 'package:interactive_gallery/utils/routes.dart';
 import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 import 'package:interactive_gallery/widgets/interactive_gallery.dart';
 
@@ -41,24 +42,4 @@ class ImageGalleryPage extends StatelessWidget {
       ),
     );
   }
-}
-
-Route<dynamic> createFadeInRoute({required RoutePageBuilder routePageBuilder}) {
-  return PageRouteBuilder(
-    transitionDuration: const Duration(milliseconds: 400),
-    reverseTransitionDuration: const Duration(milliseconds: 400),
-    pageBuilder: routePageBuilder,
-    opaque: false,
-    transitionsBuilder: (
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child,
-    ) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
-      );
-    },
-  );
 }
