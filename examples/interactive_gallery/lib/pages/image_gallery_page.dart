@@ -26,8 +26,8 @@ class ImageGalleryPage extends StatelessWidget {
                     _,
                   ) {
                     return ImageGalleryItemPage(
-                      heroTag: '__hero_${index}__',
-                      imagePath: images[index],
+                      images: images,
+                      initialIndex: index,
                     );
                   },
                 ),
