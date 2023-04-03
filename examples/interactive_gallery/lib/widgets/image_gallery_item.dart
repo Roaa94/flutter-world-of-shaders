@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:interactive_gallery/widgets/gallery_item_page.dart';
 
-class GalleryItem extends StatelessWidget {
-  const GalleryItem({
+class ImageGalleryItem extends StatelessWidget {
+  const ImageGalleryItem({
     super.key,
     required this.imagePath,
     required this.heroTag,

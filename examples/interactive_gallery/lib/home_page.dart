@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interactive_gallery/images.dart';
-import 'package:interactive_gallery/widgets/gallery_item.dart';
 import 'package:interactive_gallery/widgets/gallery_item_page.dart';
+import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 import 'package:interactive_gallery/widgets/interactive_gallery.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
                 ),
               );
             },
-            child: GalleryItem(
+            child: ImageGalleryItem(
               heroTag: '__hero_${index}__',
               imagePath: images[index],
             ),

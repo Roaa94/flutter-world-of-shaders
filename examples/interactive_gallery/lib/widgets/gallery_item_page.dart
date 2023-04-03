@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/widgets/gallery_item.dart';
+import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 
 class GalleryItemPage extends StatelessWidget {
   const GalleryItemPage({
@@ -19,7 +19,7 @@ class GalleryItemPage extends StatelessWidget {
         onVerticalDragStart: (details) {
           Navigator.of(context).pop();
         },
-        child: GalleryItem(
+        child: ImageGalleryItem(
           heroTag: heroTag,
           imagePath: imagePath,
         ),
