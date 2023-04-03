@@ -4,8 +4,8 @@ import 'package:interactive_gallery/utils/images.dart';
 import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 import 'package:interactive_gallery/widgets/interactive_gallery.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class ImageGalleryPage extends StatelessWidget {
+  const ImageGalleryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
