@@ -97,6 +97,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
         pannedViewportsCountX * widget.viewportWidth,
         pannedViewportsCountY * widget.viewportHeight,
       );
+      _directionDelta = Offset.zero;
       await Future<dynamic>.delayed(_animationDuration);
       _animationDuration = Duration.zero;
     }
