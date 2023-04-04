@@ -42,14 +42,22 @@ class InteractiveGrid extends StatefulWidget {
 class _InteractiveGridState extends State<InteractiveGrid> {
   Duration _animationDuration = Duration.zero;
   final _gridOffsetNotifier = ValueNotifier<Offset>(Offset.zero);
-  Offset _delta = Offset.zero;
+  Offset _distanceDelta = Offset.zero;
+  Offset _directionDelta = Offset.zero;
+
+  static const double toleranceFraction = 0.03;
+
+  double get xTolerance => widget.viewportWidth * toleranceFraction;
+
+  double get yTolerance => widget.viewportWidth * toleranceFraction;
 
   void _onScaleStart(ScaleStartDetails details) {
     widget.onScrollStart?.call();
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    _delta = details.focalPointDelta;
+    _distanceDelta += details.focalPointDelta;
+    _directionDelta = details.focalPointDelta;
     final newOffset = _gridOffsetNotifier.value + details.focalPointDelta;
     _gridOffsetNotifier.value = newOffset.clamp(
       Offset(
@@ -65,18 +73,26 @@ class _InteractiveGridState extends State<InteractiveGrid> {
     if (widget.enableSnapping) {
       final pannedViewportsCountXRaw =
           _gridOffsetNotifier.value.dx / widget.viewportWidth;
-      final pannedViewportsCountX = _delta.dx <= 0
-          ? pannedViewportsCountXRaw.floor()
-          : pannedViewportsCountXRaw.ceil();
+
+      final pannedViewportsCountX = _distanceDelta.dx.abs() <= xTolerance
+          ? _directionDelta.dx < 0
+              ? pannedViewportsCountXRaw.ceil()
+              : pannedViewportsCountXRaw.floor()
+          : _directionDelta.dx < 0
+              ? pannedViewportsCountXRaw.floor()
+              : pannedViewportsCountXRaw.ceil();
 
       final pannedViewportsCountYRaw =
           _gridOffsetNotifier.value.dy / widget.viewportHeight;
-      final pannedViewportsCountY = _delta.dy <= 0
-          ? pannedViewportsCountYRaw.floor()
-          : pannedViewportsCountYRaw.ceil();
+      final pannedViewportsCountY = _distanceDelta.dy.abs() <= yTolerance
+          ? _directionDelta.dy < 0
+              ? pannedViewportsCountYRaw.ceil()
+              : pannedViewportsCountYRaw.floor()
+          : _directionDelta.dy < 0
+              ? pannedViewportsCountYRaw.floor()
+              : pannedViewportsCountYRaw.ceil();
 
       _animationDuration = widget.snapDuration;
-
       _gridOffsetNotifier.value = Offset(
         pannedViewportsCountX * widget.viewportWidth,
         pannedViewportsCountY * widget.viewportHeight,
