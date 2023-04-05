@@ -83,8 +83,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
     final screenSize = MediaQuery.of(context).size;
 
     final grid = InteractiveGrid(
-      viewportWidth: screenSize.width,
-      viewportHeight: screenSize.height,
+      viewportSize: screenSize,
       crossAxisCount: widget.size,
       enableSnapping: widget.enableSnapping,
       onScrollStart: _onGridInteractionStart,

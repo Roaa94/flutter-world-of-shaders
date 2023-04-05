@@ -10,8 +10,7 @@ typedef InteractiveGridItemBuilder = Widget Function(
 class InteractiveGrid extends StatefulWidget {
   const InteractiveGrid({
     super.key,
-    required this.viewportWidth,
-    required this.viewportHeight,
+    required this.viewportSize,
     required this.children,
     this.crossAxisCount = 3,
     this.onScrollStart,
@@ -20,8 +19,7 @@ class InteractiveGrid extends StatefulWidget {
     required this.snapDuration,
   });
 
-  final double viewportWidth;
-  final double viewportHeight;
+  final Size viewportSize;
   final List<Widget> children;
   final int crossAxisCount;
   final VoidCallback? onScrollStart;
@@ -31,9 +29,9 @@ class InteractiveGrid extends StatefulWidget {
 
   int get mainAxisCount => (children.length / crossAxisCount).ceil();
 
-  double get gridWidth => viewportWidth * crossAxisCount;
+  double get gridWidth => viewportSize.width * crossAxisCount;
 
-  double get gridHeight => viewportHeight * mainAxisCount;
+  double get gridHeight => viewportSize.height * mainAxisCount;
 
   @override
   State<InteractiveGrid> createState() => _InteractiveGridState();
@@ -44,11 +42,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   final _gridOffsetNotifier = ValueNotifier<Offset>(Offset.zero);
   Offset _panStartOffset = Offset.zero;
 
-  static const double toleranceFraction = 0.1;
-
-  double get xTolerance => widget.viewportWidth * toleranceFraction;
-
-  double get yTolerance => widget.viewportWidth * toleranceFraction;
+  static const double tolerance = 20;
 
   void _onPanStart(DragStartDetails details) {
     _panStartOffset = _gridOffsetNotifier.value;
@@ -59,31 +53,58 @@ class _InteractiveGridState extends State<InteractiveGrid> {
     final newOffset = _gridOffsetNotifier.value + details.delta;
     _gridOffsetNotifier.value = newOffset.clamp(
       Offset(
-        -(widget.gridWidth - widget.viewportWidth),
-        -(widget.gridHeight - widget.viewportHeight),
+        -(widget.gridWidth - widget.viewportSize.width),
+        -(widget.gridHeight - widget.viewportSize.height),
       ),
       Offset.zero,
+    );
+  }
+
+  Offset _calculatePannedViewports(
+    Offset panStartOffset,
+    Offset panEndOffset,
+    Size viewportSize, {
+    double tolerance = tolerance,
+  }) {
+    final panDelta = panEndOffset - panStartOffset;
+    log('panDelta: $panDelta');
+
+    return Offset(
+      panEndOffset.dx / widget.viewportSize.width,
+      panEndOffset.dy / widget.viewportSize.height,
+    ).floorOrCeil(panDelta, tolerance: tolerance);
+  }
+
+  Offset _calculatePanEndGridOffset(
+    Offset panStartOffset,
+    Offset panEndOffset, {
+    double tolerance = tolerance,
+  }) {
+    final pannedViewports = _calculatePannedViewports(
+      panStartOffset,
+      panEndOffset,
+      widget.viewportSize,
+      tolerance: tolerance,
+    );
+    log('pannedViewports: $pannedViewports');
+
+    return Offset(
+      pannedViewports.dx * widget.viewportSize.width,
+      pannedViewports.dy * widget.viewportSize.height,
     );
   }
 
   Future<void> _onPanEnd(DragEndDetails details) async {
     widget.onScrollEnd?.call();
     if (widget.enableSnapping) {
-      // Moving diagonally
       final panEndOffset = _gridOffsetNotifier.value;
-      final panDelta = panEndOffset - _panStartOffset;
-      log('panDelta: $panDelta');
-
-      final pannedViewports = Offset(
-        panEndOffset.dx / widget.viewportWidth,
-        panEndOffset.dy / widget.viewportHeight,
-      ).floorOrCeil(panDelta, tolerance: 20); // Todo: implement tolerance
 
       _animationDuration = widget.snapDuration;
-      _gridOffsetNotifier.value = Offset(
-        pannedViewports.dx * widget.viewportWidth,
-        pannedViewports.dy * widget.viewportHeight,
+      _gridOffsetNotifier.value = _calculatePanEndGridOffset(
+        _panStartOffset,
+        panEndOffset,
       );
+
       await Future<dynamic>.delayed(_animationDuration);
       _animationDuration = Duration.zero;
     }
@@ -92,7 +113,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   @override
   void initState() {
     log('Viewport Dimensions: '
-        '(${widget.viewportWidth}, ${widget.viewportHeight})');
+        '(${widget.viewportSize.width}, ${widget.viewportSize.height})');
     log('Grid Dimensions: (${widget.gridWidth}, ${widget.gridHeight})');
     super.initState();
   }
@@ -132,7 +153,8 @@ class _InteractiveGridState extends State<InteractiveGrid> {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: widget.crossAxisCount,
-                childAspectRatio: widget.viewportWidth / widget.viewportHeight,
+                childAspectRatio:
+                    widget.viewportSize.width / widget.viewportSize.height,
               ),
               itemCount: widget.children.length,
               itemBuilder: (context, index) => widget.children[index],
@@ -165,9 +187,14 @@ extension OffsetUtils on Offset {
   }
 
   Offset floorOrCeil(Offset delta, {double tolerance = 0}) {
+    final dTolerance = Offset(
+      delta.dx.abs() / delta.dx * tolerance,
+      delta.dy.abs() / delta.dy * tolerance,
+    );
+
     return Offset(
-      delta.dx < 0 ? dx.floorToDouble() : dx.ceilToDouble(),
-      delta.dy < 0 ? dy.floorToDouble() : dy.ceilToDouble(),
+      delta.dx < dTolerance.dx ? dx.floorToDouble() : dx.ceilToDouble(),
+      delta.dy < dTolerance.dy ? dy.floorToDouble() : dy.ceilToDouble(),
     );
   }
 }
