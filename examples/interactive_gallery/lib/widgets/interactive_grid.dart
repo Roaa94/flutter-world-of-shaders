@@ -42,23 +42,21 @@ class InteractiveGrid extends StatefulWidget {
 class _InteractiveGridState extends State<InteractiveGrid> {
   Duration _animationDuration = Duration.zero;
   final _gridOffsetNotifier = ValueNotifier<Offset>(Offset.zero);
-  Offset _distanceDelta = Offset.zero;
-  Offset _directionDelta = Offset.zero;
+  Offset _panStartOffset = Offset.zero;
 
-  static const double toleranceFraction = 0.03;
+  static const double toleranceFraction = 0.1;
 
   double get xTolerance => widget.viewportWidth * toleranceFraction;
 
   double get yTolerance => widget.viewportWidth * toleranceFraction;
 
-  void _onScaleStart(ScaleStartDetails details) {
+  void _onPanStart(DragStartDetails details) {
+    _panStartOffset = _gridOffsetNotifier.value;
     widget.onScrollStart?.call();
   }
 
-  void _onScaleUpdate(ScaleUpdateDetails details) {
-    _distanceDelta += details.focalPointDelta;
-    _directionDelta = details.focalPointDelta;
-    final newOffset = _gridOffsetNotifier.value + details.focalPointDelta;
+  void _onPanUpdate(DragUpdateDetails details) {
+    final newOffset = _gridOffsetNotifier.value + details.delta;
     _gridOffsetNotifier.value = newOffset.clamp(
       Offset(
         -(widget.gridWidth - widget.viewportWidth),
@@ -68,36 +66,24 @@ class _InteractiveGridState extends State<InteractiveGrid> {
     );
   }
 
-  Future<void> _onScaleEnd(ScaleEndDetails details) async {
+  Future<void> _onPanEnd(DragEndDetails details) async {
     widget.onScrollEnd?.call();
     if (widget.enableSnapping) {
-      final pannedViewportsCountXRaw =
-          _gridOffsetNotifier.value.dx / widget.viewportWidth;
+      // Moving diagonally
+      final panEndOffset = _gridOffsetNotifier.value;
+      final panDelta = panEndOffset - _panStartOffset;
+      log('panDelta: $panDelta');
 
-      final pannedViewportsCountX = _distanceDelta.dx.abs() <= xTolerance
-          ? _directionDelta.dx < 0
-              ? pannedViewportsCountXRaw.ceil()
-              : pannedViewportsCountXRaw.floor()
-          : _directionDelta.dx < 0
-              ? pannedViewportsCountXRaw.floor()
-              : pannedViewportsCountXRaw.ceil();
-
-      final pannedViewportsCountYRaw =
-          _gridOffsetNotifier.value.dy / widget.viewportHeight;
-      final pannedViewportsCountY = _distanceDelta.dy.abs() <= yTolerance
-          ? _directionDelta.dy < 0
-              ? pannedViewportsCountYRaw.ceil()
-              : pannedViewportsCountYRaw.floor()
-          : _directionDelta.dy < 0
-              ? pannedViewportsCountYRaw.floor()
-              : pannedViewportsCountYRaw.ceil();
+      final pannedViewports = Offset(
+        panEndOffset.dx / widget.viewportWidth,
+        panEndOffset.dy / widget.viewportHeight,
+      ).floorOrCeil(panDelta, tolerance: 20); // Todo: implement tolerance
 
       _animationDuration = widget.snapDuration;
       _gridOffsetNotifier.value = Offset(
-        pannedViewportsCountX * widget.viewportWidth,
-        pannedViewportsCountY * widget.viewportHeight,
+        pannedViewports.dx * widget.viewportWidth,
+        pannedViewports.dy * widget.viewportHeight,
       );
-      _directionDelta = Offset.zero;
       await Future<dynamic>.delayed(_animationDuration);
       _animationDuration = Duration.zero;
     }
@@ -115,9 +101,9 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onScaleStart: _onScaleStart,
-      onScaleUpdate: _onScaleUpdate,
-      onScaleEnd: _onScaleEnd,
+      onPanStart: _onPanStart,
+      onPanUpdate: _onPanUpdate,
+      onPanEnd: _onPanEnd,
       child: OverflowBox(
         maxHeight: double.infinity,
         maxWidth: double.infinity,
@@ -158,11 +144,30 @@ class _InteractiveGridState extends State<InteractiveGrid> {
   }
 }
 
-extension ClampOffset on Offset {
+extension OffsetUtils on Offset {
   Offset clamp(Offset lowerLimit, Offset upperLimit) {
     return Offset(
       dx.clamp(lowerLimit.dx, upperLimit.dx),
       dy.clamp(lowerLimit.dy, upperLimit.dy),
+    );
+  }
+
+  Offset ceil() {
+    return Offset(dx.ceilToDouble(), dy.ceilToDouble());
+  }
+
+  Offset floor() {
+    return Offset(dx.floorToDouble(), dy.floorToDouble());
+  }
+
+  Offset round() {
+    return Offset(dx.roundToDouble(), dy.roundToDouble());
+  }
+
+  Offset floorOrCeil(Offset delta, {double tolerance = 0}) {
+    return Offset(
+      delta.dx < 0 ? dx.floorToDouble() : dx.ceilToDouble(),
+      delta.dy < 0 ? dy.floorToDouble() : dy.ceilToDouble(),
     );
   }
 }
