@@ -15,7 +15,7 @@ class ImageGalleryPage extends StatelessWidget {
       extendBody: true,
       body: InteractiveGallery(
         children: List.generate(
-          images.length,
+          gifs.length,
           (index) => GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -26,7 +26,7 @@ class ImageGalleryPage extends StatelessWidget {
                     _,
                   ) {
                     return ImageGalleryItemPage(
-                      images: images,
+                      images: gifs,
                       initialIndex: index,
                     );
                   },
@@ -35,7 +35,7 @@ class ImageGalleryPage extends StatelessWidget {
             },
             child: ImageGalleryItem(
               heroTag: '__hero_${index}__',
-              imagePath: images[index],
+              imagePath: gifs[index],
             ),
           ),
         ),
