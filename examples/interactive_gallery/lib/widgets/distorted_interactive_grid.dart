@@ -11,17 +11,20 @@ class DistortedInteractiveGrid extends StatefulWidget {
     this.enableSnapping = true,
     this.enableDistortion = true,
     this.crossAxisCount = 2,
+    this.initialIndex = 0,
+    this.maxItemsPerViewport = 1,
   });
 
   final List<Widget> children;
   final int crossAxisCount;
   final bool enableSnapping;
   final bool enableDistortion;
-
-  int get maxItemsPerViewport => (children.length / (crossAxisCount * crossAxisCount)).floor();
+  final int initialIndex;
+  final int maxItemsPerViewport;
 
   @override
-  State<DistortedInteractiveGrid> createState() => _DistortedInteractiveGridState();
+  State<DistortedInteractiveGrid> createState() =>
+      _DistortedInteractiveGridState();
 }
 
 class _DistortedInteractiveGridState extends State<DistortedInteractiveGrid>
@@ -72,7 +75,8 @@ class _DistortedInteractiveGridState extends State<DistortedInteractiveGrid>
 
   @override
   void didUpdateWidget(covariant DistortedInteractiveGrid oldWidget) {
-    if (oldWidget.crossAxisCount != widget.crossAxisCount) {
+    if (oldWidget.crossAxisCount != widget.crossAxisCount ||
+        oldWidget.maxItemsPerViewport != widget.maxItemsPerViewport) {
       viewports = _generateViewports();
     }
     super.didUpdateWidget(oldWidget);
@@ -81,6 +85,20 @@ class _DistortedInteractiveGridState extends State<DistortedInteractiveGrid>
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+
+    final grid = InteractiveGrid(
+      viewportSize: screenSize,
+      crossAxisCount: widget.crossAxisCount,
+      enableSnapping: widget.enableSnapping,
+      onScrollStart: _onGridInteractionStart,
+      onScrollEnd: _onGridInteractionEnd,
+      snapDuration: snapDuration,
+      children: viewports,
+    );
+
+    if (!widget.enableDistortion) {
+      return grid;
+    }
 
     return ValueListenableBuilder(
       valueListenable: _distortionAmountNotifier,
@@ -99,15 +117,7 @@ class _DistortedInteractiveGridState extends State<DistortedInteractiveGrid>
           child: child,
         );
       },
-      child: InteractiveGrid(
-        viewportSize: screenSize,
-        crossAxisCount: widget.crossAxisCount,
-        enableSnapping: widget.enableSnapping,
-        onScrollStart: _onGridInteractionStart,
-        onScrollEnd: _onGridInteractionEnd,
-        snapDuration: snapDuration,
-        children: viewports,
-      ),
+      child: grid,
     );
   }
 }

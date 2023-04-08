@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:interactive_gallery/pages/image_gallery_item_page.dart';
 import 'package:interactive_gallery/utils/images.dart';
 import 'package:interactive_gallery/utils/routes.dart';
-import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 import 'package:interactive_gallery/widgets/distorted_interactive_grid.dart';
+import 'package:interactive_gallery/widgets/image_gallery_item.dart';
 
 class ImageGalleryPage extends StatelessWidget {
   const ImageGalleryPage({super.key});
+
+  static List<String> items = gifs;
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +16,9 @@ class ImageGalleryPage extends StatelessWidget {
       backgroundColor: Colors.black,
       extendBody: true,
       body: DistortedInteractiveGrid(
+        maxItemsPerViewport: 10,
         children: List.generate(
-          gifs.length,
+          items.length,
           (index) => GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -26,7 +29,7 @@ class ImageGalleryPage extends StatelessWidget {
                     _,
                   ) {
                     return ImageGalleryItemPage(
-                      images: gifs,
+                      images: items,
                       initialIndex: index,
                     );
                   },
@@ -35,7 +38,7 @@ class ImageGalleryPage extends StatelessWidget {
             },
             child: ImageGalleryItem(
               heroTag: '__hero_${index}__',
-              imagePath: gifs[index],
+              imagePath: items[index],
             ),
           ),
         ),
