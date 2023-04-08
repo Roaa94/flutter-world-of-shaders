@@ -157,7 +157,7 @@ In the actual code the `child` param of builder widgets was used for better perf
 ---
 
 ### Resources for learning shaders:
-* [The Book of Shader](https://thebookofshaders.com/)
+* [The Book of Shaders](https://thebookofshaders.com/)
 * [Inigo Quilez](https://iquilezles.org/)'s articles and videos about drawing with math
 * [ShaderToy](https://www.shadertoy.com/) for lots of shader examples within a browser editor
 * [From the Flutter docs](https://docs.flutter.dev/development/ui/advanced/shaders)
