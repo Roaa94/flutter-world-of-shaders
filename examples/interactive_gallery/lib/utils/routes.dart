@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 Route<dynamic> createFadeInRoute({required RoutePageBuilder routePageBuilder}) {
   return PageRouteBuilder(
-    transitionDuration: const Duration(milliseconds: 400),
-    reverseTransitionDuration: const Duration(milliseconds: 400),
+    transitionDuration: const Duration(milliseconds: 700),
+    reverseTransitionDuration: const Duration(milliseconds: 700),
     pageBuilder: routePageBuilder,
     opaque: false,
     transitionsBuilder: (
