@@ -1,4 +1,4 @@
-## Flutter Interactive Gallery 🏞️
+## Flutter Interactive Gallery
 Interactive gallery with a shader pincushion distortion applied using Flutter's [`FragmentShader`](https://docs.flutter.dev/development/ui/advanced/shaders) API.
 
 🎨 [Design & animation Inspiration](https://twitter.com/slavakornilov/status/1592055393844625409)
@@ -14,11 +14,11 @@ There are a few elements involved in this UI.
 * An interactive grid that you can pan freely through in all directions, with snapping.
 * A `Hero` animation that navigate to a page with another interavtive grid.
 
-### 1. The Shader
+### The Shader
 
 The shader can be found in [`packages/core/lib/shaders/pincushion.glsl`](https://github.com/Roaa94/flutter-world-of-shaders/blob/main/packages/core/lib/shaders/pincushion.glsl) and creates the following effect:
 
-<img width="300" alt="Flutter pincushion distortion shader" src="https://user-images.githubusercontent.com/50345358/230726841-1c8d18a0-78eb-4933-8e3a-8cb535efae9f.gif" />
+<img width="300" alt="Flutter pincushion distortion shader" src="https://user-images.githubusercontent.com/50345358/230730732-369bd012-793c-4887-b9a3-69ec213e358a.gif" />
 
 A look into the GLSL code:
 
@@ -114,7 +114,52 @@ return ShaderBuilder(
 );
 ```
 
-### 2. The Interactive Grid
-This is pure Flutter.
+### The Interactive Grid
+<img width="350" alt="Flutter interactive grid with snapping" src="https://user-images.githubusercontent.com/50345358/230730634-f14069d3-a473-468b-869f-a7f74a20c698.gif" />
 
+
+This is pure Flutter. A combination of `OverflowBox`, `GridView` and `GestureDetector` widgets. `onPanStart` of the gesture detector triggers the shader distortion, `onPanUpdate` moves the `GridView` around, and `onPanEnd` resets the distortion and snaps to the closest grid item. The grid is wrapped with a `TweenAnimationBuilder` to animate the snapping.
+
+
+In [`interactive_grid.dart`](https://github.com/Roaa94/flutter-world-of-shaders/blob/main/examples/interactive_gallery/lib/widgets/interactive_grid.dart)'s build method:
+
+```dart
+return GestureDetector(
+  onPanStart: _onPanStart, // Trigger distortion (set to 1)
+  onPanUpdate: _onPanUpdate, // Move Grid
+  onPanEnd: _onPanEnd, // Reset distortion (set to 0) and snap to closest grid item
+  child: OverflowBox(
+    maxHeight: double.infinity,
+    maxWidth: double.infinity,
+    alignment: Alignment.topLeft,
+    child: TweenAnimationBuilder(
+      duration: _animationDuration,
+      curve: Curves.easeOutSine,
+      tween: Tween<Offset>(begin: Offset.zero, end: gridOffset),
+      builder: (context, Offset offset, Widget? child) {
+        return Transform(
+          transform: Matrix4.identity()
+            ..setTranslationRaw(offset.dx, offset.dy, 0),
+          child: SizedBox(
+            width: widget.gridWidth,
+            height: widget.gridHeight,
+            child: GridView.builder(/* ... */),
+          ),
+        );
+      },
+    ),
+  ),
+);
+```
+
+In the actual code the `child` param of builder widgets was used for better performace (e.g. `TweenAnimationBuilder`, `ShaderBuilder`, ..etc).
+
+
+### Resources for learning shaders:
+* [The Book of Shader](https://thebookofshaders.com/)
+* [Inigo Quilez](https://iquilezles.org/)'s articles and videos about drawing with math
+* [ShaderToy](https://www.shadertoy.com/) for lots of shader examples within a browser editor
+* [From the Flutter docs](https://docs.flutter.dev/development/ui/advanced/shaders)
+* [Renan](https://twitter.com/reNotANumber)'s [`shader_playground`](https://github.com/renancaraujo/shaders_playground) & [`glow_stuff_with_flutter`](https://github.com/renancaraujo/glow_stuff_with_flutter) repos & [podcast](https://www.youtube.com/watch?v=uBTVV1bo3dg)
+* [Jochum](https://twitter.com/wolfenrain)'s [`flutter_shader_examples`](https://github.com/wolfenrain/flutter_shaders_example) repo & [this video](https://www.youtube.com/watch?v=FQ36PB3Umzk)
 
