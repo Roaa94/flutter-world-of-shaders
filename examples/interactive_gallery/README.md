@@ -154,6 +154,7 @@ return GestureDetector(
 
 In the actual code the `child` param of builder widgets was used for better performace (e.g. `TweenAnimationBuilder`, `ShaderBuilder`, ..etc).
 
+---
 
 ### Resources for learning shaders:
 * [The Book of Shader](https://thebookofshaders.com/)
