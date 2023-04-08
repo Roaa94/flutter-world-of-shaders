@@ -17,7 +17,9 @@ class InteractiveGrid extends StatefulWidget {
     this.onScrollStart,
     this.onScrollEnd,
     this.enableSnapping = true,
-    required this.snapDuration,
+    this.snapDuration = const Duration(milliseconds: 500),
+    this.initialIndex = 0,
+    this.onChanged,
   });
 
   final Size viewportSize;
@@ -27,6 +29,8 @@ class InteractiveGrid extends StatefulWidget {
   final VoidCallback? onScrollEnd;
   final bool enableSnapping;
   final Duration snapDuration;
+  final int initialIndex;
+  final ValueChanged<int>? onChanged;
 
   int get mainAxisCount => (children.length / crossAxisCount).ceil();
 
@@ -40,8 +44,23 @@ class InteractiveGrid extends StatefulWidget {
 
 class _InteractiveGridState extends State<InteractiveGrid> {
   Duration _animationDuration = Duration.zero;
-  final _gridOffsetNotifier = ValueNotifier<Offset>(Offset.zero);
+  late final ValueNotifier<Offset> _gridOffsetNotifier;
   Offset _panStartOffset = Offset.zero;
+
+  Offset _indexToOffset(int index) {
+    final xViewports = index % widget.crossAxisCount;
+    final yViewports = index ~/ widget.crossAxisCount;
+    return Offset(
+      -xViewports * widget.viewportSize.width,
+      -yViewports * widget.viewportSize.height,
+    );
+  }
+
+  int _offsetToIndex(Offset offset) {
+    final xIndex = offset.dx.abs() ~/ widget.viewportSize.width;
+    final yIndex = offset.dy.abs() ~/ widget.viewportSize.height;
+    return yIndex * widget.crossAxisCount + xIndex;
+  }
 
   static const double tolerance = 20;
 
@@ -105,6 +124,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
         _panStartOffset,
         panEndOffset,
       );
+      widget.onChanged?.call(_offsetToIndex(_gridOffsetNotifier.value));
 
       await Future<dynamic>.delayed(_animationDuration);
       _animationDuration = Duration.zero;
@@ -116,6 +136,10 @@ class _InteractiveGridState extends State<InteractiveGrid> {
     log('Viewport Dimensions: '
         '(${widget.viewportSize.width}, ${widget.viewportSize.height})');
     log('Grid Dimensions: (${widget.gridWidth}, ${widget.gridHeight})');
+    final initialOffset = _indexToOffset(widget.initialIndex);
+    print('initialOffset');
+    print(initialOffset);
+    _gridOffsetNotifier = ValueNotifier<Offset>(initialOffset);
     super.initState();
   }
 
@@ -166,4 +190,3 @@ class _InteractiveGridState extends State<InteractiveGrid> {
     );
   }
 }
-

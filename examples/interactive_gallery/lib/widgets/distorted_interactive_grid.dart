@@ -93,6 +93,7 @@ class _DistortedInteractiveGridState extends State<DistortedInteractiveGrid>
       onScrollStart: _onGridInteractionStart,
       onScrollEnd: _onGridInteractionEnd,
       snapDuration: snapDuration,
+      initialIndex: widget.initialIndex,
       children: viewports,
     );
 
