@@ -25,6 +25,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - assets/gallery/
   shaders:
     - packages/core/shaders/pincushion.glsl
