@@ -52,7 +52,7 @@ class _ShaderToyExample1State extends State<ShaderToyExample1>
               painter: ShaderPainter(shader),
             );
           },
-          assetKey: 'shaders/shader_toy_examples/example_1.glsl',
+          assetKey: 'packages/core/shaders/shader_toy_examples/example_1.glsl',
         ),
       ),
     );

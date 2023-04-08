@@ -19,7 +19,7 @@ class _FenceShaderState extends State<FenceShader> {
   double time = 0;
 
   Future<void> _loadShader() async {
-    program = await FragmentProgram.fromAsset('shaders/fence.glsl');
+    program = await FragmentProgram.fromAsset('packages/core/shaders/fence.glsl');
     if (program != null) {
       shader = program!.fragmentShader();
     }

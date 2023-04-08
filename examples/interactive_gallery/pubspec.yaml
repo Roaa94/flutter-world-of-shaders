@@ -27,4 +27,4 @@ flutter:
     - assets/
     - assets/gallery/
   shaders:
-    - shaders/pincushion.glsl
+    - packages/core/shaders/pincushion.glsl

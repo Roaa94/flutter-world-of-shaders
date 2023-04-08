@@ -22,7 +22,7 @@ class ShapesShaders extends StatelessWidget {
               painter: ShaderPainter(shader),
             );
           },
-          assetKey: 'shaders/playground/rectangle.glsl',
+          assetKey: 'packages/core/shaders/playground/rectangle.glsl',
         ),
       ),
     );

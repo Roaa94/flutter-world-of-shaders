@@ -16,7 +16,7 @@ class _RawShaderState extends State<RawShader> {
   bool isLoading = false;
 
   Future<void> _loadShader() async {
-    program = await FragmentProgram.fromAsset('shaders/fence.glsl');
+    program = await FragmentProgram.fromAsset('packages/core/shaders/fence.glsl');
     if (program != null) {
       shader = program!.fragmentShader();
     }

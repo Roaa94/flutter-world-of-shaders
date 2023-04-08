@@ -46,7 +46,7 @@ class PincushionDistortion extends StatelessWidget {
           child: child!,
         );
       },
-      assetKey: 'shaders/pincushion.glsl',
+      assetKey: 'packages/core/shaders/pincushion.glsl',
       child: child,
     );
   }
