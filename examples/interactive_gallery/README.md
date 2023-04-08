@@ -1,5 +1,5 @@
 ## Flutter Interactive Gallery
-Interactive gallery with a shader pincushion distortion applied using Flutter's [`FragmentShader`](https://docs.flutter.dev/development/ui/advanced/shaders) API.
+Interactive gallery with a shader pincushion distortion applied using Flutter's [`FragmentProgram`](https://docs.flutter.dev/development/ui/advanced/shaders) API.
 
 🎨 [Design & animation Inspiration](https://twitter.com/slavakornilov/status/1592055393844625409)
 
@@ -10,7 +10,7 @@ Read on for implementation details 👇🏼
 ## How it's done 👩🏻‍💻
 
 There are a few elements involved in this UI.
-* The shader applying the distortion to the grid. Which involves `glsl` code and `Flutter`'s `FragmentShader` API implementation
+* The shader applying the distortion to the grid. Which involves `glsl` code and `Flutter`'s `FragmentProgram` API implementation
 * An interactive grid that you can pan freely through in all directions, with snapping.
 * A `Hero` animation that navigate to a page with another interavtive grid.
 
