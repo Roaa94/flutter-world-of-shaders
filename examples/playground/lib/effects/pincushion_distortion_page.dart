@@ -7,13 +7,25 @@ class PincushionDistortionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: FisheyeDistortionWrapper(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            'assets/bricks.jpg',
-            fit: BoxFit.cover,
+          child: GridView.count(
+            padding: const EdgeInsets.all(10),
+            crossAxisCount: 5,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            children: List.generate(
+              40,
+              (index) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -37,7 +49,7 @@ class FisheyeDistortionWrapper extends StatefulWidget {
 }
 
 class _FisheyeDistortionWrapperState extends State<FisheyeDistortionWrapper> {
-  double distortion = 1;
+  double distortion = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +60,18 @@ class _FisheyeDistortionWrapperState extends State<FisheyeDistortionWrapper> {
           child: widget.child,
         ),
         Positioned(
-          bottom: 10,
-          left: 10,
-          right: 10,
-          child: DecoratedBox(
+          bottom: 20,
+          left: 20,
+          right: 20,
+          child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withOpacity(0.8),
               borderRadius: BorderRadius.circular(10),
             ),
+            padding: const EdgeInsets.all(10),
             child: Slider(
               activeColor: Colors.white,
+              inactiveColor: Colors.white.withOpacity(0.5),
               value: distortion,
               divisions: 200,
               onChanged: (value) {
