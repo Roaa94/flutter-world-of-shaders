@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:playground/effects/pincushion_distortion_page.dart';
 import 'package:playground/shader_toy_examples/shader_toy_example_1.dart';
 
@@ -11,6 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return MaterialApp(
       title: 'Interactive Gallery',
       debugShowCheckedModeBanner: false,

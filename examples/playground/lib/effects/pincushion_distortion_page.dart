@@ -8,17 +8,22 @@ class PincushionDistortionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: FisheyeDistortionWrapper(
+      body: PincushionDistortionWrapper(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: GridView.count(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 10,
+              top: MediaQuery.of(context).padding.top,
+            ),
             crossAxisCount: 5,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             children: List.generate(
-              40,
+              70,
               (index) => Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -33,8 +38,8 @@ class PincushionDistortionPage extends StatelessWidget {
   }
 }
 
-class FisheyeDistortionWrapper extends StatefulWidget {
-  const FisheyeDistortionWrapper({
+class PincushionDistortionWrapper extends StatefulWidget {
+  const PincushionDistortionWrapper({
     super.key,
     required this.child,
     this.power = 0.2,
@@ -44,11 +49,12 @@ class FisheyeDistortionWrapper extends StatefulWidget {
   final double power;
 
   @override
-  State<FisheyeDistortionWrapper> createState() =>
-      _FisheyeDistortionWrapperState();
+  State<PincushionDistortionWrapper> createState() =>
+      _PincushionDistortionWrapperState();
 }
 
-class _FisheyeDistortionWrapperState extends State<FisheyeDistortionWrapper> {
+class _PincushionDistortionWrapperState
+    extends State<PincushionDistortionWrapper> {
   double distortion = 0;
 
   @override

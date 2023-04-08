@@ -176,6 +176,7 @@ class _InteractiveGridState extends State<InteractiveGrid> {
             height: widget.gridHeight,
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: widget.crossAxisCount,
                 childAspectRatio:
