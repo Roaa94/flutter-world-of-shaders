@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-class GalleryGrid extends StatefulWidget {
-  const GalleryGrid({
+class MasonryGrid extends StatefulWidget {
+  const MasonryGrid({
     super.key,
     this.children = const [],
     required this.index,
@@ -14,10 +14,10 @@ class GalleryGrid extends StatefulWidget {
   final int index;
 
   @override
-  State<GalleryGrid> createState() => _GalleryGridState();
+  State<MasonryGrid> createState() => _MasonryGridState();
 }
 
-class _GalleryGridState extends State<GalleryGrid> {
+class _MasonryGridState extends State<MasonryGrid> {
   late List<Widget> rows;
 
   static const int maxItemsPerRow = 4;
@@ -123,7 +123,7 @@ class _GalleryGridState extends State<GalleryGrid> {
   }
 
   @override
-  void didUpdateWidget(covariant GalleryGrid oldWidget) {
+  void didUpdateWidget(covariant MasonryGrid oldWidget) {
     if (oldWidget.children != widget.children) {
       rows = _generateRows();
     }

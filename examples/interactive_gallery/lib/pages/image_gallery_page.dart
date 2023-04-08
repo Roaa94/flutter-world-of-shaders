@@ -3,7 +3,7 @@ import 'package:interactive_gallery/pages/image_gallery_item_page.dart';
 import 'package:interactive_gallery/utils/images.dart';
 import 'package:interactive_gallery/utils/routes.dart';
 import 'package:interactive_gallery/widgets/image_gallery_item.dart';
-import 'package:interactive_gallery/widgets/interactive_gallery.dart';
+import 'package:interactive_gallery/widgets/distorted_interactive_grid.dart';
 
 class ImageGalleryPage extends StatelessWidget {
   const ImageGalleryPage({super.key});
@@ -13,7 +13,7 @@ class ImageGalleryPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       extendBody: true,
-      body: InteractiveGallery(
+      body: DistortedInteractiveGrid(
         children: List.generate(
           gifs.length,
           (index) => GestureDetector(

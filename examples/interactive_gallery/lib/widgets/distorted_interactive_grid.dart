@@ -1,30 +1,30 @@
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:interactive_gallery/widgets/gallery_grid.dart';
 import 'package:interactive_gallery/widgets/interactive_grid.dart';
+import 'package:interactive_gallery/widgets/masonry_grid.dart';
 
-class InteractiveGallery extends StatefulWidget {
-  const InteractiveGallery({
+class DistortedInteractiveGrid extends StatefulWidget {
+  const DistortedInteractiveGrid({
     super.key,
     this.children = const [],
     this.enableSnapping = true,
     this.enableDistortion = true,
-    this.size = 2,
+    this.crossAxisCount = 2,
   });
 
   final List<Widget> children;
-  final int size;
+  final int crossAxisCount;
   final bool enableSnapping;
   final bool enableDistortion;
 
-  int get maxItemsPerViewport => (children.length / (size * size)).floor();
+  int get maxItemsPerViewport => (children.length / (crossAxisCount * crossAxisCount)).floor();
 
   @override
-  State<InteractiveGallery> createState() => _InteractiveGalleryState();
+  State<DistortedInteractiveGrid> createState() => _DistortedInteractiveGridState();
 }
 
-class _InteractiveGalleryState extends State<InteractiveGallery>
+class _DistortedInteractiveGridState extends State<DistortedInteractiveGrid>
     with SingleTickerProviderStateMixin {
   final _distortionAmountNotifier = ValueNotifier<double>(0);
   late List<Widget> viewports;
@@ -45,7 +45,7 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
       (urlsSliceIndex) {
         final childrenSlice = slicedChildren[urlsSliceIndex];
 
-        return GalleryGrid(
+        return MasonryGrid(
           index: urlsSliceIndex,
           children: childrenSlice.toList(),
         );
@@ -71,8 +71,8 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   }
 
   @override
-  void didUpdateWidget(covariant InteractiveGallery oldWidget) {
-    if (oldWidget.size != widget.size) {
+  void didUpdateWidget(covariant DistortedInteractiveGrid oldWidget) {
+    if (oldWidget.crossAxisCount != widget.crossAxisCount) {
       viewports = _generateViewports();
     }
     super.didUpdateWidget(oldWidget);
@@ -81,16 +81,6 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
-    final grid = InteractiveGrid(
-      viewportSize: screenSize,
-      crossAxisCount: widget.size,
-      enableSnapping: widget.enableSnapping,
-      onScrollStart: _onGridInteractionStart,
-      onScrollEnd: _onGridInteractionEnd,
-      snapDuration: snapDuration,
-      children: viewports,
-    );
 
     return ValueListenableBuilder(
       valueListenable: _distortionAmountNotifier,
@@ -109,7 +99,15 @@ class _InteractiveGalleryState extends State<InteractiveGallery>
           child: child,
         );
       },
-      child: grid,
+      child: InteractiveGrid(
+        viewportSize: screenSize,
+        crossAxisCount: widget.crossAxisCount,
+        enableSnapping: widget.enableSnapping,
+        onScrollStart: _onGridInteractionStart,
+        onScrollEnd: _onGridInteractionEnd,
+        snapDuration: snapDuration,
+        children: viewports,
+      ),
     );
   }
 }
