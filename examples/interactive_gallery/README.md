@@ -5,7 +5,7 @@ Interactive gallery with a shader pincushion distortion applied using Flutter's 
 
 Read on for implementation details 👇🏼
 
-https://github.com/Roaa94/flutter-world-of-shaders/assets/50345358/230723114-01abce58-18ef-47cb-8880-98c44d289054
+<video width="100%" src="https://github.com/Roaa94/flutter-world-of-shaders/assets/50345358/230723114-01abce58-18ef-47cb-8880-98c44d289054" alt="Flutter interactive gallery with shaders">
 
 ## How it's done 👩🏻‍💻
 
