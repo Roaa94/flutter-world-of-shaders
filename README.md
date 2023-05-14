@@ -6,8 +6,8 @@ A Flutter project for shader examples & learning material.
 ## Examples
 ### 1. [Interactive Gallery](https://github.com/Roaa94/flutter-world-of-shaders/tree/main/examples/interactive_gallery)
 
-<video width="100%" src="https://user-images.githubusercontent.com/50345358/230723114-01abce58-18ef-47cb-8880-98c44d289054.mp4" alt="Flutter interactive gallery with shaders"></video>
-
+<video width="100%" src="https://github.com/Roaa94/flutter-world-of-shaders/assets/50345358/230723114-01abce58-18ef-47cb-8880-98c44d289054" alt="Flutter interactive gallery with shaders">
+  
 🎨 [Design Inspiration](https://twitter.com/slavakornilov/status/1592055393844625409)
 
 ---
